@@ -28,11 +28,6 @@ import Deboard from "./component/Deboard"
 import BuySubscription from "./component/SalesSection/VisitPurpose/BuySubscription";
 import NewVisitForm2 from "./component/SalesSection/NewVisitForm2";
 import AboutUs from "./pages/AboutPage";
-import ContactUs from "./pages/ContactUs";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsConditions from "./pages/TermsAndCondition";
-import RefundPolicy from "./pages/RefundPolicy";
-import Footer from "./HomepageComponent/Footer";
 import SignupPage from "./pages/Signup";
 
 
@@ -76,10 +71,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignupPage/>}/>
             <Route path="/aboutus" element={<AboutUs />} />
-            <Route path="/contactus" element={<ContactUs />} />
-            <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-            <Route path="/refundpolicy" element={<RefundPolicy />} />
-            <Route path="/termsandcondition" element={<TermsConditions />} />
+            
         </Routes>
      
       </BrowserRouter>
