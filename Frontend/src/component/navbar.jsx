@@ -37,7 +37,7 @@ const Navbar = () => {
                 className="text-xl font-bold hidden sm:block"
                 style={{ color: "#DFD0B8" }}
               >
-                PetCare
+                PetCure
               </span>
             </Link>
           </div>
