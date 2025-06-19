@@ -18,13 +18,28 @@ import UserLoginPage from "./pages/UserLogin";
 import CheckAuth from "./component/CheckAuth";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import SalesHistory from "./component/SalesSection/SalesHistory";
+import NewReminders from "./component/Reminders/NewReminders";
+import Inquiry from "./component/SalesSection/VisitPurpose/Inquiry";
+import Veterinary from "./component/SalesSection/VisitPurpose/Veterinary";
+import Hostel from "./component/SalesSection/VisitPurpose/Hostel";
+import NewVisitForm from "./component/SalesSection/NewVisitForm";
+import Deboard from "./component/Deboard"
+import BuySubscription from "./component/SalesSection/VisitPurpose/BuySubscription";
+import NewVisitForm2 from "./component/SalesSection/NewVisitForm2";
+import AboutUs from "./pages/AboutPage";
+import ContactUs from "./pages/ContactUs";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsConditions from "./pages/TermsAndCondition";
+import RefundPolicy from "./pages/RefundPolicy";
+import Footer from "./HomepageComponent/Footer";
+import SignupPage from "./pages/Signup";
 
 
 function App() {
   const dispatch = useDispatch();
-  const {isAuthenticated}=useSelector((state)=>state.auth)
+  const { isAuthenticated } = useSelector((state) => state.auth);
  
-
   return (
     <div className="w-screen overflow-x-hidden">
       <BrowserRouter>
@@ -36,25 +51,40 @@ function App() {
             <Route path="/pet" element={<PetForm />} />
             <Route path="/inventory" element={<InventoryForm />} />
             <Route path="/inventoryList" element={<InventoryList />} />
-
+ 
             <Route path="/editinventory" element={<EditInventory />} />
             <Route path="/alertlist" element={<AlertList />} />
             <Route path="/BreedManagement" element={<BreedManagement />} />
-
+ 
             <Route path="/salesSection" element={<SalesSection />} />
-            <Route path="/reminders" element={<Reminders />} />
+            <Route path="/saleshistory" element={<SalesHistory />} />
+            <Route path="/reminders" element={<NewReminders/>} />
+            {/* <Route path="/new" element={<NewReminders />} /> */}
             <Route path="/attendance" element={<Attendance />} />
             <Route path="/petByDate" element={<PetByDate />} />
-          </Route>
+            <Route path="/fill" element={<Hostel />} />
+            <Route path="/nvisit" element={<NewVisitForm/>}/>
+            <Route path="/buysubscription" element={<BuySubscription/>}/>
+            <Route path="/deboard" element={<Deboard />} />
+            <Route path="/nvisit2" element={<NewVisitForm2/>}/>
 
+          </Route>
+ 
           <Route element={<CheckAuth isAuthenticated={isAuthenticated} />}>
             <Route path="/login" element={<UserLoginPage />} />
           </Route>
           <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<SignupPage/>}/>
+            <Route path="/aboutus" element={<AboutUs />} />
+            <Route path="/contactus" element={<ContactUs />} />
+            <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+            <Route path="/refundpolicy" element={<RefundPolicy />} />
+            <Route path="/termsandcondition" element={<TermsConditions />} />
         </Routes>
+     
       </BrowserRouter>
     </div>
   );
 }
-
+ 
 export default App;

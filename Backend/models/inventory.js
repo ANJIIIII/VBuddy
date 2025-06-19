@@ -7,7 +7,6 @@ const inventorySchema = new mongoose.Schema({
   },
   recommendedDoses: {
     type: Number,
-    required:true,
   },
   stockUnit: {
     type: Number,
@@ -15,7 +14,7 @@ const inventorySchema = new mongoose.Schema({
   },
   itemType: {
     type: String,
-    enum: ["disposable", "syringe"],
+    enum: ["disposable", "syringe","medicine"],
     required: true,
   },
   volumeML: {
@@ -26,19 +25,16 @@ const inventorySchema = new mongoose.Schema({
   },
   unitCostPrice: {
     type: Number,
+    required:true
   },
   unitMinRetailPriceNGO: {
     type: Number,
+    required:true
   },
   unitMaxRetailPriceCustomer: {
     type: Number,
+    required:true
   },
-  linkedSales: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Sales",
-    },
-  ],
 });
 
 module.exports = mongoose.model("Inventory", inventorySchema);

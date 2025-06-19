@@ -38,7 +38,6 @@ const NewVisitPopup = ({ pet, onClose }) => {
 
   useEffect(() => {
     dispatch(getAllInventory()).then((data) => {
-      
     });
 
     // Set minimum date to today (IST)

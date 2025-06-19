@@ -3,6 +3,7 @@ const Owner = require("../models/Owner");
 const mongoose = require("mongoose");
 const Visit = require("../models/Visit");
 const { DateTime } = require("luxon");
+const Boarding = require("../models/boarding");
 
 exports.addPet = async (req, res) => {
   // Start a MongoDB session for transaction
@@ -42,6 +43,7 @@ exports.addPet = async (req, res) => {
       dob: pet.dob,
       owner: owner._id,
       vaccinations: pet.vaccinations || [],
+      neutered: pet.neutered,
       registrationDate: pet.registrationDate,
     }));
 
@@ -150,21 +152,70 @@ exports.filterPetsByBreedAndSpecies = async (req, res) => {
 exports.getFilteredPetsByNameAndPhone = async (req, res) => {
   try {
     const { name, phone } = req.query;
-    let list = [];
-    if (name && phone) {
-      list = await Pet.find({
-        name: { $regex: new RegExp(name, "i") },
-      }).populate({
-        path: "owner",
-        match: { phone: phone },
-        select: "name",
-      });
-    } else {
-      list = await Pet.find({}).populate({
-        path: "owner",
-        select: "name",
-      });
-    }
+
+    // if (name && phone) {
+    //   list = await Pet.find({
+    //     name: { $regex: new RegExp(name, "i") },
+    //   }).populate({
+    //     path: "owner",
+    //     match: { phone: phone },
+    //     select: "name",
+    //   });
+    // } else {
+    //   list = await Pet.find({}).populate({
+    //     path: "owner",
+    //     select: "name",
+    //   });
+    // }
+    const pipeline = [
+      // Optional name filter
+      ...(name
+        ? [
+            {
+              $match: {
+                name: { $regex: new RegExp(name, "i") },
+              },
+            },
+          ]
+        : []),
+
+      // Join with owner
+      {
+        $lookup: {
+          from: "owners", // replace with your actual collection name
+          localField: "owner",
+          foreignField: "_id",
+          as: "owner",
+        },
+      },
+      {
+        $unwind: {
+          path: "$owner",
+          preserveNullAndEmptyArrays: true, // include pets with no owner
+        },
+      },
+
+      // Optional phone filter on joined owner
+      ...(phone
+        ? [
+            {
+              $match: {
+                "owner.phone": phone,
+              },
+            },
+          ]
+        : []),
+
+      // Optional projection to include only what you need
+      {
+        $project: {
+          name: 1,
+          owner: { name: 1 }, // include owner name only
+        },
+      },
+    ];
+
+    const list = await Pet.aggregate(pipeline);
 
     if (!list) {
       return res
@@ -215,7 +266,10 @@ exports.getPetDate = async (req, res) => {
 exports.getPetVisitHistory = async (req, res) => {
   try {
     const visits = await Visit.find({ pet: req.params.petId })
-      .populate({path:"itemDetails", populate:{path:"item",select:"itemName"}})
+      .populate({
+        path: "itemDetails",
+        populate: { path: "item", select: "itemName" },
+      })
       .sort("-createdAt");
     res.json({ visits });
   } catch (error) {
@@ -232,24 +286,202 @@ exports.getPetByBirthday = async (req, res) => {
     const List = await Pet.find({
       $expr: {
         $and: [
-          { $eq: [{ $month: "$dob" }, todayMonth] }, 
-          { $eq: [{ $dayOfMonth: "$dob" }, todayDay] }, 
+          { $eq: [{ $month: "$dob" }, todayMonth] },
+          { $eq: [{ $dayOfMonth: "$dob" }, todayDay] },
         ],
       },
     }).populate({
-      path:"owner",
-      select:"name phone email"
+      path: "owner",
+      select: "name phone email",
     });
 
     return res.status(200).json({
-      success:true,
-      List
-    })
+      success: true,
+      List,
+    });
   } catch (err) {
-    console.log("Error in get pet by birthday controller ",err);
+    console.log("Error in get pet by birthday controller ", err);
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
     });
   }
+};
+
+exports.getPetByBirthday = async (req, res) => {
+  try {
+    const today = DateTime.now().setZone("Asia/Kolkata");
+    const todayMonth = today.month;
+    const todayDay = today.day;
+
+    const List = await Pet.find({
+      $expr: {
+        $and: [
+          { $eq: [{ $month: "$dob" }, todayMonth] },
+          { $eq: [{ $dayOfMonth: "$dob" }, todayDay] },
+        ],
+      },
+    }).populate({
+      path: "owner",
+      select: "name phone email",
+    });
+
+    return res.status(200).json({
+      success: true,
+      List,
+    });
+  } catch (err) {
+    console.log("Error in get pet by birthday controller ", err);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+exports.getBoardedPetList = async (req, res) => {
+  try {
+    const { type } = req.query;
+    const boardedPetList = await Boarding.find({
+      boardingType: type,
+      isBoarded: true,
+    }).populate({
+      path: "petId",
+      select: "name",
+      populate: {
+        path: "owner",
+        select: "name phone",
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      boardedPetList,
+      message: "List fetched successfully",
+    });
+  } catch (err) {
+    console.log("Error in get boarded pet list", err);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+exports.editPetDetails = async (req, res) => {
+  
+  try {
+    const {
+      name,
+      species,
+      breed,
+      color,
+      customBreed,
+      dob,
+      registrationDate,
+      sex,
+      vaccinations,
+      neutered,
+      id,
+    } = req.body;
+
+    if (
+      !name ||
+      !species ||
+      !color ||
+      !dob ||
+      !registrationDate ||
+      !sex ||
+      neutered===null
+    ) {
+      return res.json({
+        success: false,
+        message: "Please provide all details",
+      });
+    }
+
+    if (!breed && !customBreed) {
+      return res.json({
+        success: false,
+        message: "Please provide breed details",
+      });
+    }
+
+    // Save all pets
+    const savedPet = await Pet.findByIdAndUpdate(id, {
+      name,
+      species,
+      breed: customBreed ? customBreed : breed,
+      color,
+      sex,
+      dob,
+      registrationDate,
+      neutered,
+      vaccinations,
+    },{ new: true, runValidators: true });
+
+
+    return res.status(200).json({
+      success: true,
+      message: "Pet information saved successfully",
+    });
+  } catch (error) {
+    // If there's an error, abort the transaction
+  
+    console.log("Error in editpetinfo controller", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to save information",
+    });
+  } 
+};
+
+exports.editOwnerDetails = async (req, res) => {
+  
+  try {
+    const {
+      name,
+      phone,
+      email,
+      address,
+      segment,
+      id
+    } = req.body;
+
+    if (
+      !name ||
+      !phone ||
+      !email ||
+      !address ||
+      !segment 
+    ) {
+      return res.json({
+        success: false,
+        message: "Please provide all details",
+      });
+    }
+
+    // Save all pets
+    const savedOwner = await Owner.findByIdAndUpdate(id, {
+      name,
+      phone,
+      email,
+      address,
+      segment
+    },{ new: true, runValidators: true });
+
+
+    return res.status(200).json({
+      success: true,
+      message: "Pet information saved successfully",
+    });
+  } catch (error) {
+    // If there's an error, abort the transaction
+  
+    console.log("Error in editpetinfo controller", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to save information",
+    });
+  } 
 };

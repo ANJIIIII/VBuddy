@@ -14,21 +14,36 @@ exports.addinventory = async (req, res) => {
       recommendedDoses,
     } = req.body;
 
-    if (
-      !itemName ||
-      !stockUnit ||
-      !itemType ||
-      !volumeML ||
-      !totalVolume ||
-      !unitCostPrice ||
-      !unitMaxRetailPriceCustomer ||
-      !unitMinRetailPriceNGO ||
-      !recommendedDoses
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields need to  be filled",
-      });
+    if (itemType !== "medicine") {
+      if (
+        !itemName ||
+        !stockUnit ||
+        !itemType ||
+        !volumeML ||
+        !totalVolume ||
+        !unitCostPrice ||
+        !unitMaxRetailPriceCustomer ||
+        !unitMinRetailPriceNGO ||
+        !recommendedDoses
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "All fields need to  be filled",
+        });
+      }
+    } else {
+      if (
+        !itemName ||
+        !stockUnit ||
+        !itemType ||
+        !unitCostPrice ||
+        !unitMaxRetailPriceCustomer ||
+        !unitMinRetailPriceNGO
+      )
+        return res.status(400).json({
+          success: false,
+          message: "All fields need to  be filled",
+        });
     }
 
     const newItem = new Inventory({
@@ -68,7 +83,6 @@ exports.addinventory = async (req, res) => {
 
 exports.getInventoryList = async (req, res) => {
   try {
-    
     const items = await Inventory.find().sort({ itemName: 1 });
     return res.status(200).json({
       success: true,
@@ -100,44 +114,82 @@ exports.editInventory = async (req, res) => {
       recommendedDoses,
     } = req.body;
 
-    if (
-      !_id ||
-      !itemName ||
-      !stockUnit ||
-      !itemType ||
-      !volumeML ||
-      !totalVolume ||
-      !unitCostPrice ||
-      !unitMaxRetailPriceCustomer ||
-      !unitMinRetailPriceNGO ||
-      !recommendedDoses
-    ) {
+   
+    if (!itemName || !stockUnit || !itemType) {
       return res.status(400).json({
         success: false,
-        message: "All fields need to  be filled",
+        message: "Item name, stock unit, and item type are required fields",
       });
     }
 
-    const response = await Inventory.findByIdAndUpdate(_id, {
+    
+    const updateData = {
       itemName,
       stockUnit,
       itemType,
-      volumeML,
-      totalVolume,
-      unitCostPrice,
-      unitMaxRetailPriceCustomer,
-      unitMinRetailPriceNGO,
-      recommendedDoses,
-    });
+      unitCostPrice: unitCostPrice || 0,
+      unitMinRetailPriceNGO: unitMinRetailPriceNGO || 0,
+      unitMaxRetailPriceCustomer: unitMaxRetailPriceCustomer || 0,
+    };
+
+    
+    if (itemType !== "medicine") {
+      updateData.volumeML = volumeML || 0;
+      updateData.totalVolume = totalVolume || 0;
+      updateData.recommendedDoses = recommendedDoses || 0;
+    }
+
+  
+    const response = await Inventory.findByIdAndUpdate(_id, updateData, { new: true });
+
+    if (!response) {
+      return res.status(404).json({
+        success: false,
+        message: "Inventory item not found",
+      });
+    }
 
     return res.status(200).json({
       success: true,
       message: "Inventory details updated successfully",
+      item: response
     });
   } catch (error) {
+    console.error("Error in editInventory:", error);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
+    });
+  }
+};
+
+exports.deleteInventory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Find the inventory item by ID
+    const inventoryItem = await Inventory.findById(id);
+    
+    if (!inventoryItem) {
+      return res.status(404).json({
+        success: false,
+        message: "Inventory item not found"
+      });
+    }
+    
+    // Delete the inventory item
+    await Inventory.findByIdAndDelete(id);
+    
+    return res.status(200).json({
+      success: true,
+      message: "Inventory item deleted successfully"
+    });
+  } catch (error) {
+    console.error("Error deleting inventory item:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete inventory item",
+      error: error.message
     });
   }
 };
@@ -166,7 +218,9 @@ exports.getInventoryItemDetails = async (req, res) => {
 
 exports.getAlertListOfInventory = async (req, res) => {
   try {
-    const items = await Inventory.find({totalVolume:{$lte:100}}).sort({ itemName: 1 });
+    const items = await Inventory.find({ totalVolume: { $lte: 100 } }).sort({
+      itemName: 1,
+    });
     return res.status(200).json({
       success: true,
       message: "Items fetched successfully",
@@ -181,3 +235,5 @@ exports.getAlertListOfInventory = async (req, res) => {
     });
   }
 };
+
+

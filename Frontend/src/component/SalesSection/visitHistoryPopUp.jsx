@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { useDispatch } from "react-redux";
-import { getInventoryItemDetails } from "../../store/slices/inventorySlice";
 
 const VisitHistoryPopup = ({ visits, onClose }) => {
   return (

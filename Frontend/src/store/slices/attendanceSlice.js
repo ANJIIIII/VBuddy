@@ -33,7 +33,8 @@ export const getAttendance = createAsyncThunk(
 
 export const updateAttendance = createAsyncThunk(
   "/attendance/updateattendance",
-  async ({ date, list },{dispatch}) => {
+  async ({ date, presentIds,absentIds },{dispatch}) => {
+    console.log(date,presentIds,absentIds)
     const token = localStorage.getItem("authtoken")||"" ;
     const response = await fetch(
       `${
@@ -45,7 +46,7 @@ export const updateAttendance = createAsyncThunk(
           "Authorization": token,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ date, list }),
+        body: JSON.stringify({ date, presentIds,absentIds }),
       }
     );
 

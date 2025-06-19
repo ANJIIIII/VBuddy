@@ -1,4 +1,5 @@
 const Attendance = require("../models/attendance");
+const ScheduledVisit = require("../models/scheduledVisit");
 
 exports.getAttendanceList = async (req, res) => {
   try {
@@ -44,49 +45,44 @@ exports.getAttendanceList = async (req, res) => {
 
 exports.updateAttendanceList = async (req, res) => {
   try {
-    const { date, list } = req.body;
-    
-  
-    if (!list || !date ||list.length===0) {
+    const { date, presentIds, absentIds } = req.body;
+
+    if (!date) {
       return res.status(400).json({
         success: "false",
         message: "Can't update attendance",
       });
     }
 
-    const newList = list.map((item, idx) => {
-      return {
-        petId: item?.petId?._id,
-        purpose: item?.purpose,
-        present: item?.present,
-      };
-    });
-
     const queryDate = new Date(date);
 
-    const attendance = await Attendance.findOneAndUpdate(
-      {
-        date: queryDate,
-      },
-      {
-        List: newList,
-      },
-      { returnDocument: "after" }
-    ).populate({
-      path: "List",
+    if (presentIds.length !== 0) {
+      await ScheduledVisit.updateMany(
+        { _id: { $in: presentIds }, date: queryDate },
+        { $set: { present: true } }
+      );
+    }
+
+    if (absentIds.length !== 0) {
+      await ScheduledVisit.updateMany(
+        { _id: { $in: absentIds }, date: queryDate },
+        { $set: { present: false } }
+      );
+    }
+
+    const List = await ScheduledVisit.find({
+      date: queryDate,
+    }).populate({
+      path: "petId",
       populate: {
-        path: "petId",
-        populate: {
-          path: "owner",
-          select: "name phone email",
-        },
+        path: "owner",
       },
-    });;
+    });
 
     return res.status(200).json({
       success: true,
       message: "Attendance updated successfully",
-      attendance,
+      List,
     });
   } catch (error) {
     console.log("Error in getAttendance controller", error);

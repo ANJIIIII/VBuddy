@@ -1,60 +1,22 @@
-const mongoose = require('mongoose');
- 
+const mongoose = require("mongoose");
+
 const visitSchema = new mongoose.Schema(
   {
     pet: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Pet',
+      ref: "Pet",
       required: true,
     },
-    purpose: {
-      type: String,
+    visitType: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref:"VisitType",
       required: true,
     },
-    itemDetails: [
-      {
-        item: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Inventory',
-          required: true,
-        },
-        dose: {
-          type: Number,
-          required: true,
-          min: 1,
-        },
-        volumeML: {
-          type: Number,
-          min: 1,
-        },
-      },
-    ],
-    customerType: {
-      type: String,
-      enum: ['NGO', 'Customer'],
-      required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    nextFollowUp: {
-      type: Date,
-      required: true,
-    },
-    followUpPurpose: {
-      type: String,
-      required:true
-    },
-    status: {
-      type: String,
-      enum: ['Scheduled', 'Completed', 'Cancelled'],
-      default: 'Scheduled',
+    details: {
+      type: mongoose.Schema.Types.Mixed,
     },
   },
   { timestamps: true }
 );
- 
-module.exports = mongoose.model('Visit', visitSchema);
- 
+
+module.exports = mongoose.model("Visit", visitSchema);

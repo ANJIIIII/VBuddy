@@ -10,38 +10,21 @@ const Dashboard = () => {
   const inventoryList = () => navigate("/inventoryList");
   const BreedManagement = () => navigate("/BreedManagement");
   const SalesSectionn = () => navigate("/petByDate");
+  const AboutUs = () => navigate("/aboutus");
+  const ContactUs = () => navigate("/contactus");
+  const PrivacyPolicy = () => navigate("/privacypolicy");
+  const RefundPolicy = () => navigate("/refundpolicy");
+  const TermsAndCondition = () => navigate("/termsandcondition");
 
   return (
-    <div className="w-screen p-6 space-y-6 bg-gradient-to-br from-white to-blue-50 min-h-screen">
-      {/* Header Messages */}
-      <div className="space-y-4">
-        <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-green-500 hover:shadow-lg transition-shadow duration-300">
-          <h2 className="font-bold text-lg text-green-700">
-            System Validity Renewed
-          </h2>
-          <p className="text-gray-600">
-            Your System validity successfully renewed till Jan 11, 2026.
-          </p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500 hover:shadow-lg transition-shadow duration-300">
-          <h2 className="font-bold text-lg text-blue-700">
-            GST Migration Successful
-          </h2>
-          <p className="text-gray-600">
-            Congratulations! You have successfully migrated to GST regime w.e.f.
-            2018/05/28
-          </p>
-        </div>
-      </div>
-
+    <div className="w-screen p-6 space-y-6 bg-gradient-to-br from-[#EFE3C2] to-white min-h-screen">
       {/* Main Dashboard Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Column */}
         <div className="space-y-6">
           {/* Pet Owner Master */}
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border-l-4 border-[#85A947]">
+            <h2 className="text-xl font-bold mb-4 text-[#123524]">
               A. Pet Owner Master
             </h2>
             <ul className="space-y-3">
@@ -51,9 +34,9 @@ const Dashboard = () => {
                     e.preventDefault();
                     addpet();
                   }}
-                  className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 cursor-pointer"
+                  className="flex items-center space-x-2 text-[#3E7B27] hover:text-[#123524] cursor-pointer"
                 >
-                  <span className="text-lg">+</span>
+                  <span className="text-lg text-[#85A947]">+</span>
                   <span>Quick Add</span>
                 </a>
               </li>
@@ -63,7 +46,7 @@ const Dashboard = () => {
                     e.preventDefault();
                     viewlist();
                   }}
-                  className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 cursor-pointer"
+                  className="flex items-center space-x-2 text-[#3E7B27] hover:text-[#123524] cursor-pointer"
                 >
                   <span>View Complete List</span>
                 </a>
@@ -71,7 +54,7 @@ const Dashboard = () => {
               <li>
                 <a
                   href="#"
-                  className="flex items-center space-x-2 text-blue-600 hover:text-blue-800"
+                  className="flex items-center space-x-2 text-[#3E7B27] hover:text-[#123524]"
                   onClick={(e) => {
                     e.preventDefault();
                     BreedManagement();
@@ -84,8 +67,8 @@ const Dashboard = () => {
           </div>
 
           {/* Inventory Master */}
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border-l-4 border-[#85A947]">
+            <h2 className="text-xl font-bold mb-4 text-[#123524]">
               B. Inventory Master
             </h2>
             <ul className="space-y-3">
@@ -95,7 +78,7 @@ const Dashboard = () => {
                     e.preventDefault();
                     addinventory();
                   }}
-                  className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 cursor-pointer"
+                  className="flex items-center space-x-2 text-[#3E7B27] hover:text-[#123524] cursor-pointer"
                 >
                   <span>Add New Item</span>
                 </a>
@@ -106,7 +89,7 @@ const Dashboard = () => {
                     e.preventDefault();
                     inventoryList();
                   }}
-                  className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 cursor-pointer"
+                  className="flex items-center space-x-2 text-[#3E7B27] hover:text-[#123524] cursor-pointer"
                 >
                   <span>Search Inventory</span>
                 </a>
@@ -117,7 +100,7 @@ const Dashboard = () => {
                     e.preventDefault();
                     inventoryList();
                   }}
-                  className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 cursor-pointer"
+                  className="flex items-center space-x-2 text-[#3E7B27] hover:text-[#123524] cursor-pointer"
                 >
                   <span>View All Items List</span>
                 </a>
@@ -125,7 +108,7 @@ const Dashboard = () => {
               <li>
                 <a
                   href="#"
-                  className="flex items-center space-x-2 text-blue-600 hover:text-blue-800"
+                  className="flex items-center space-x-2 text-[#3E7B27] hover:text-[#123524]"
                 >
                   <span>Stock Barcoding by choice</span>
                 </a>
@@ -133,7 +116,7 @@ const Dashboard = () => {
               <li>
                 <a
                   href="alertlist"
-                  className="flex items-center space-x-2 text-red-600 hover:text-red-800 ml-4"
+                  className="flex items-center space-x-2 text-[#123524] hover:text-[#3E7B27] ml-4 font-medium"
                 >
                   <span>* Alert List</span>
                 </a>
@@ -142,8 +125,8 @@ const Dashboard = () => {
           </div>
 
           {/* Email and Card Reminders */}
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border-l-4 border-[#85A947]">
+            <h2 className="text-xl font-bold mb-4 text-[#123524]">
               C. Email and Card Reminders
             </h2>
             <ul className="space-y-3">
@@ -156,9 +139,10 @@ const Dashboard = () => {
                 <li key={index}>
                   <a
                     href="#"
-                    className="flex items-center space-x-2 text-blue-600 hover:text-blue-800"
+                    className="flex items-center space-x-2 text-[#3E7B27] hover:text-[#123524]"
                   >
-                    <span>{`${index + 1}. ${item}`}</span>
+                    <span className="text-[#85A947]">{`${index + 1}.`}</span>
+                    <span>{item}</span>
                   </a>
                 </li>
               ))}
@@ -169,8 +153,8 @@ const Dashboard = () => {
         {/* Right Column */}
         <div className="space-y-6">
           {/* SMS Reminders Panel */}
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border-l-4 border-[#85A947]">
+            <h2 className="text-xl font-bold mb-4 text-[#123524]">
               D. Reminders Panel
             </h2>
             <ul className="space-y-3">
@@ -187,9 +171,10 @@ const Dashboard = () => {
                 <li key={index}>
                   <Link
                     to={item?.path}
-                    className="flex items-center space-x-2 text-blue-600 hover:text-blue-800"
+                    className="flex items-center space-x-2 text-[#3E7B27] hover:text-[#123524]"
                   >
-                    <span>{`${index + 1}. ${item?.name}`}</span>
+                    <span className="text-[#85A947]">{`${index + 1}.`}</span>
+                    <span>{item?.name}</span>
                   </Link>
                 </li>
               ))}
@@ -197,9 +182,9 @@ const Dashboard = () => {
           </div>
 
           {/* Sales Panel */}
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border-l-4 border-[#85A947]">
             <h2
-              className="text-xl font-bold mb-4 text-gray-800 cursor-pointer"
+              className="text-xl font-bold mb-4 text-[#123524] cursor-pointer"
               onClick={(e) => {
                 e.preventDefault();
                 SalesSectionn();
@@ -209,27 +194,30 @@ const Dashboard = () => {
             </h2>
             <ul className="space-y-3">
               <li className="flex items-center space-x-2">
-                <span>1. Today's Q</span>
-                <span className="mx-2">|</span>
-                <a href="#" className="text-blue-600 hover:text-blue-800">
+                <span className="text-[#85A947]">1.</span>
+                <span className="text-[#123524]">Today's Q</span>
+                <span className="mx-2 text-[#85A947]">|</span>
+                <a href="#" className="text-[#3E7B27] hover:text-[#123524]">
                   P.O.S.
                 </a>
               </li>
               <li className="flex items-center space-x-2">
-                <span>2. Today's Visits</span>
-                <span className="mx-2">|</span>
-                <a href="#" className="text-blue-600 hover:text-blue-800">
+                <span className="text-[#85A947]">2.</span>
+                <span className="text-[#123524]">Today's Visits</span>
+                <span className="mx-2 text-[#85A947]">|</span>
+                <a href="#" className="text-[#3E7B27] hover:text-[#123524]">
                   Pet Wise Visits
                 </a>
               </li>
               <li className="flex items-center space-x-2">
-                <span>3. Sales Reg</span>
-                <span className="mx-2">|</span>
-                <a href="#" className="text-blue-600 hover:text-blue-800">
+                <span className="text-[#85A947]">3.</span>
+                <span className="text-[#123524]">Sales Reg</span>
+                <span className="mx-2 text-[#85A947]">|</span>
+                <a href="#" className="text-[#3E7B27] hover:text-[#123524]">
                   Dues List
                 </a>
-                <span className="mx-2">|</span>
-                <a href="#" className="text-blue-600 hover:text-blue-800">
+                <span className="mx-2 text-[#85A947]">|</span>
+                <a href="#" className="text-[#3E7B27] hover:text-[#123524]">
                   Sales Analysis
                 </a>
               </li>
@@ -237,28 +225,28 @@ const Dashboard = () => {
           </div>
 
           {/* Purchase Panel */}
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border-l-4 border-[#85A947]">
+            <h2 className="text-xl font-bold mb-4 text-[#123524]">
               F. Purchase Panel
             </h2>
             <ul className="space-y-3">
               <li className="flex items-center space-x-2">
-                <span>1.</span>
-                <a href="#" className="text-blue-600 hover:text-blue-800">
+                <span className="text-[#85A947]">1.</span>
+                <a href="#" className="text-[#3E7B27] hover:text-[#123524]">
                   Purchase Entries
                 </a>
-                <span>|</span>
-                <a href="#" className="text-blue-600 hover:text-blue-800">
+                <span className="text-[#85A947]">|</span>
+                <a href="#" className="text-[#3E7B27] hover:text-[#123524]">
                   Purchase Register
                 </a>
               </li>
               <li className="flex items-center space-x-2">
-                <span>2.</span>
-                <a href="#" className="text-blue-600 hover:text-blue-800">
+                <span className="text-[#85A947]">2.</span>
+                <a href="#" className="text-[#3E7B27] hover:text-[#123524]">
                   Supplier Accounts
                 </a>
-                <span>|</span>
-                <a href="#" className="text-blue-600 hover:text-blue-800">
+                <span className="text-[#85A947]">|</span>
+                <a href="#" className="text-[#3E7B27] hover:text-[#123524]">
                   Purchase Return Reg
                 </a>
               </li>
@@ -266,14 +254,14 @@ const Dashboard = () => {
           </div>
 
           {/* Events and Tasks & Appointments */}
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border-l-4 border-[#85A947]">
+            <h2 className="text-xl font-bold mb-4 text-[#123524]">
               G. Events and Tasks
             </h2>
-            <h2 className="text-xl font-bold mb-4 text-gray-800">
+            <h2 className="text-xl font-bold mb-4 text-[#123524]">
               H. Appointments
             </h2>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-[#3E7B27]">
               Manage your schedule and appointments here.
             </p>
           </div>
@@ -287,7 +275,7 @@ const Dashboard = () => {
             <a
               key={index}
               href="#"
-              className="text-blue-600 hover:text-blue-800 px-4 py-2 rounded-md hover:bg-blue-50 transition-colors duration-300"
+              className="text-[#3E7B27] hover:text-[#123524] px-4 py-2 rounded-md hover:bg-[#EFE3C2] transition-colors duration-300"
             >
               {item}
             </a>

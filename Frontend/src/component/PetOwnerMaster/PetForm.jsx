@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { addPet } from "../../store/slices/petSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../store/slices/authSlice";
 
 const PetForm = () => {
   const { addPetLoading } = useSelector((state) => state.pets);
@@ -11,6 +10,7 @@ const PetForm = () => {
   const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
+
     dispatch(addPet(data))
       .then((data) => {
         if (data?.payload?.success) {
@@ -29,9 +29,57 @@ const PetForm = () => {
       "Labrador Retriever",
       "German Shepherd",
       "Golden Retriever",
-      "Bulldog",
+      "Shih Tzu",
+      "Siberian Husky",
+      "Poodle (Toy, Miniature, Standard)",
+      "Maltipoo",
+      "Pug",
       "Beagle",
-      "Poodle",
+      "Rottweiler",
+      "Doberman Pinscher",
+      "Boxer",
+      "Great Dane",
+      "Saint Bernard",
+      "Cocker Spaniel",
+      "Lhasa Apso",
+      "Dachshund",
+      "Chihuahua (Teacup & Standard)",
+      "Pitbull Terrier",
+      "Akita Inu",
+      "Dalmatian",
+      "French Bulldog",
+      "English Bulldog",
+      "Border Collie",
+      "Bullmastiff",
+      "Alaskan Malamute",
+      "Cane Corso",
+      "Belgian Malinois",
+      "Pomeranian (including Toy Pomeranian)",
+      "Yorkshire Terrier",
+      "American Eskimo Dog",
+      "Boston Terrier",
+      "Afghan Hound",
+      "Cavalier King Charles Spaniel",
+      "Maltese",
+      "Samoyed",
+      "Newfoundland",
+      "West Highland White Terrier (Westie)",
+      "Miniature Schnauzer",
+      "Bernese Mountain Dog",
+      "Irish Setter",
+      "Basset Hound",
+      "Scottish Terrier",
+      "Havanese",
+      "Weimaraner",
+      "Jack Russell Terrier",
+      "Bloodhound",
+      "Whippet",
+      "Shetland Sheepdog",
+      "Shiba Inu",
+      "Indian Spitz",
+      "Rajapalayan",
+      "Gaddi Kutta",
+      "Indie",
     ],
     cat: [
       "Persian",
@@ -52,7 +100,6 @@ const PetForm = () => {
       "Turtle",
     ],
     hamster: ["Syrian Hamster", "Dwarf Hamster", "Roborovski Hamster"],
-    other: ["Other"],
   };
 
   const handleAddPet = () => {
@@ -132,7 +179,7 @@ const PetForm = () => {
               <input
                 type="email"
                 id="email"
-                {...register("email", { required: true })}
+                {...register("email")}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
             </div>
@@ -245,6 +292,7 @@ const PetForm = () => {
                         ))}
                       </optgroup>
                     ))}
+                    <option value="Other">Other</option>
                   </select>
                 </div>
 
@@ -294,7 +342,20 @@ const PetForm = () => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
                 </div>
-
+                <div className="flex">
+                  <label
+                    htmlFor={`neutered_${petIndex}`}
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Neutered
+                  </label>
+                  <input
+                    type="checkbox"
+                    id={`neutered_${petIndex}`}
+                    {...register(`pets[${petIndex}].neutered`)}
+                    className="mt-1 ml-4 block w-4 h-4 rounded-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                </div>
                 <div>
                   <label
                     htmlFor={`registrationDate_${petIndex}`}

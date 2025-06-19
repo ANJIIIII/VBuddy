@@ -3,13 +3,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isLoading: false,
   user: null,
-  isAuthenticated: localStorage.getItem("authtoken")!==null,
+  isAuthenticated: localStorage.getItem("authtoken") !== null,
 };
 
 export const login = createAsyncThunk("/auth/login", async (formData) => {
-  
   const response = await fetch(
-    
     `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/login`,
     {
       method: "POST",
@@ -19,14 +17,36 @@ export const login = createAsyncThunk("/auth/login", async (formData) => {
       body: JSON.stringify(formData),
     }
   );
-  
+
   const data = await response.json();
+  if (data.success) {
+    localStorage.setItem("authtoken", data.token);
+  }
+  return data;
+});
+
+export const signup = createAsyncThunk("/auth/signup", async (formData) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/signup`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    }
+  );
+
+  const data = await response.json();
+  // if (data.success) {
+  //   localStorage.setItem("authtoken", data.token);
+  // }
   return data;
 });
 
 export const logout = createAsyncThunk("/auth/logout", async () => {
-  if(localStorage.getItem("authtoken")!==null)
-  localStorage?.removeItem("authtoken");
+  if (localStorage.getItem("authtoken") !== null)
+    localStorage?.removeItem("authtoken");
 });
 
 const authSlice = createSlice({
@@ -45,10 +65,20 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state) => {
         state.isLoading = false;
       })
+      .addCase(signup.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(signup.fulfilled, (state, action) => {
+        state.isLoading = false;
+      
+      })
+      .addCase(signup.rejected, (state) => {
+        state.isLoading = false;
+      })
       .addCase(logout.fulfilled, (state) => {
         state.isAuthenticated = false;
-        state.user=null
-        state.isLoading=false
+        state.user = null;
+        state.isLoading = false;
       });
   },
 });

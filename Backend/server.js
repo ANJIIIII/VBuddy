@@ -9,6 +9,9 @@ const petRoutes = require("./routes/petRoutes");
 const visitRoutes = require("./routes/visitRoutes");
 const reminderRoutes = require("./routes/reminderRoutes");
 const attendanceRoutes = require("./routes/attendanceRoutes");
+const subscriptionRoutes=require("./routes/subscriptionRoutes");
+const boardingRoutes=require("./routes/boardingRoutes")
+const paymentRoutes=require("./routes/paaymentroutes")
 
 const app = express();
 
@@ -36,9 +39,9 @@ app.use("/api/v1/inventory", inventoryRoutes);
 app.use("/api/v1/visit", visitRoutes);
 app.use("/api/v1/reminders", reminderRoutes);
 app.use("/api/v1/attendance", attendanceRoutes);
-
-
-
+app.use("/api/v1/subscription",subscriptionRoutes);
+app.use("/api/v1/boarding",boardingRoutes);
+app.use("/api/v1/payments",paymentRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 5000;
