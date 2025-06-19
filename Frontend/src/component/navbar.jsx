@@ -44,16 +44,17 @@ const Navbar = () => {
 
           {/* Desktop Navigation Links - Center */}
           <div className="hidden md:flex items-center space-x-1 absolute left-1/2 transform -translate-x-1/2">
-            <Link
+            
+
+            {isAuthenticated && (
+              <>
+              <Link
               to="/"
               className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10"
               style={{ color: "#DFD0B8" }}
             >
               Home
             </Link>
-
-            {isAuthenticated && (
-              <>
                 <Link
                   to="/deboard"
                   className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10"
@@ -157,6 +158,13 @@ const Navbar = () => {
               </div>
             ) : (
               <>
+              <Link
+              to="/"
+              className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10"
+              style={{ color: "#DFD0B8" }}
+            >
+              Home
+            </Link>
                 <Link
                   to="/signup"
                   className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10"

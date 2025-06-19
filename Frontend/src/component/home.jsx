@@ -46,13 +46,13 @@ const PetVeterinaryHomepage = () => {
           style={{ backgroundColor: "#393E46" }}
         ></div>
 
-        <div className="max-w-7xl mx-auto relative z-10">
+        <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left side - Text */}
             <div className="space-y-8">
               <div className="space-y-6">
                 <h1
-                  className="text-5xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight"
+                  className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight"
                   style={{ color: "#222831" }}
                 >
                  Gentle Hands, Happy {" "}
@@ -99,7 +99,7 @@ const PetVeterinaryHomepage = () => {
             <div className="relative">
               
               <img
-                className="relative z-10 w-full max-w-[900px] h-auto "
+                className="relative z-10 w-full max-w-[500px] h-auto "
                 src="./images/3.png"
                 alt="Pet care"
               />
@@ -119,7 +119,7 @@ const PetVeterinaryHomepage = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="relative h-[600px] overflow-hidden rounded-2xl shadow-2xl">
+            <div className="relative h-[500px] overflow-hidden rounded-2xl shadow-2xl">
                 <img
                   className="w-full object-cover"
                   src="./images/4.png"
