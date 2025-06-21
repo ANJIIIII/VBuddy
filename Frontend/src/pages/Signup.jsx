@@ -1,6 +1,8 @@
 
 
 import { useState } from "react"
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -9,6 +11,9 @@ export default function SignupPage() {
     password: "",
     role: "customer",
   })
+   const navigate=useNavigate();
+  
+  const dispatch=useDispatch();
 
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
@@ -53,32 +58,44 @@ export default function SignupPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+   const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
 
-    if (!validateForm()) return
-
-    setLoading(true)
+    setLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
-      alert("Account created successfully! Please login to continue.")
-      // Reset form
-      setFormData({
-        fullName: "",
-        email: "",
-        password: "",
-        role: "customer",
-      })
+      const data = await response.json();
+
+      if (data.success) {
+        alert("Account created successfully! Please login to continue.");
+        navigate("/login");
+      } else {
+        alert(data.message || "Failed to create account");
+        if (data.errors) {
+          setErrors(data.errors);
+        }
+      }
+
     } catch (error) {
-      console.error("Signup error:", error)
-      alert("Failed to create account. Please try again.")
+      console.error("Signup error:", error);
+      alert("Failed to create account. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
   <div className="min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-[#DFD0B8] to-white px-4 py-6">

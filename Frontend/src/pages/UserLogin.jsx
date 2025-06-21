@@ -1,6 +1,9 @@
 
 
 import { useState } from "react"
+import { useDispatch, useSelector } from "react-redux";
+import {login} from "../store/slices/authSlice"
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)
@@ -9,19 +12,47 @@ export default function LoginPage() {
     password: "",
     role: "",
   })
+ 
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const dispatch=useDispatch();
 
+   const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Validate role selection
     if (!formData.role) {
-      alert("Please select your role")
-      return
+      alert("Please select your role");
+      return;
     }
-
-    // Handle login logic here
-    console.log("Login data:", formData)
-    alert("Login functionality would be implemented here")
-  }
+    
+    dispatch(login(formData)).then((data) => {
+      if (data?.payload?.success) {
+        localStorage.setItem("authtoken", data?.payload?.token || "");
+        localStorage.setItem("userRole", data?.payload?.user?.role || "");
+        localStorage.setItem("userId", data?.payload?.user?.id || "");
+        
+        // Store customer_id if user is customer
+        if (data?.payload?.user?.customer_id) {
+          localStorage.setItem("customerId", data?.payload?.user?.customer_id);
+        }
+        
+        setFormData({
+          email: "",
+          password: "",
+          role: "staff",
+        });
+        
+        // You might want to redirect based on role here
+        // if (data?.payload?.user?.role === 'staff') {
+        //   window.location.href = '/staff-dashboard';
+        // } else if (data?.payload?.user?.role === 'customer') {
+        //   window.location.href = '/customer-dashboard';
+        // }
+      } else {
+        alert(data?.payload?.message);
+      }
+    });
+  };
 
   const roleOptions = [
     { value: "staff", label: "Staff Member", icon: "👨‍⚕️" },
