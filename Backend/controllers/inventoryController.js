@@ -218,9 +218,12 @@ exports.getInventoryItemDetails = async (req, res) => {
 
 exports.getAlertListOfInventory = async (req, res) => {
   try {
-    const items = await Inventory.find({ totalVolume: { $lte: 100 } }).sort({
+    const items = await Inventory.find({ stock: { $lte: 100 } }).sort({
       itemName: 1,
     });
+
+    // console.log("items", items);
+
     return res.status(200).json({
       success: true,
       message: "Items fetched successfully",
