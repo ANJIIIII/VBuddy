@@ -71,8 +71,7 @@ const AlertList = () => {
         <tr className="bg-[#172554] text-white text-left">
           <th className="px-6 py-3 text-center">No.</th>
           <th className="px-6 py-3 text-center">Name</th>
-          <th className="px-6 py-3 text-center">Stock Unit</th>
-          <th className="px-6 py-3 text-center">Total Volume</th>
+          <th className="px-6 py-3 text-center">Stock</th>
           <th className="px-6 py-3 text-center">Refill</th>
         </tr>
       </thead>
@@ -85,8 +84,8 @@ const AlertList = () => {
             >
               <td className="px-6 py-4 text-center">{idx + 1}</td>
               <td className="px-6 py-4 text-center">{item?.itemName}</td>
-              <td className="px-6 py-4 text-center">{item?.stockUnit}</td>
-              <td className="px-6 py-4 text-center">{item?.totalVolume}</td>
+              <td className="px-6 py-4 text-center">{item?.stock}</td>
+       
               <td className="px-6 py-4 text-center">
                 <button
                   onClick={()=>handleRefill(item?._id)}
