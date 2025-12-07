@@ -163,17 +163,6 @@ const MainLayout = () => {
 
                             {isProfileOpen && (
                                 <div className="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-secondary-100 py-2 animate-in fade-in zoom-in-95 duration-200">
-                                    <div className="px-4 py-3 border-b border-secondary-100 mb-1">
-                                        <p className="text-sm font-semibold text-secondary-900">{user?.fullName || 'User'}</p>
-                                        <p className="text-xs text-secondary-500">{user?.role || 'Admin'}</p>
-                                    </div>
-                                    {/* Home removed from here as it is now in main nav */}
-                                    <button onClick={() => navigate('/dashboard')} className="w-full text-left px-4 py-2.5 text-sm text-secondary-700 hover:bg-secondary-50 flex items-center">
-                                        <LayoutDashboard size={16} className="mr-2" /> Dashboard
-                                    </button>
-                                    <button className="w-full text-left px-4 py-2.5 text-sm text-secondary-700 hover:bg-secondary-50 flex items-center">
-                                        <User size={16} className="mr-2" /> My Profile
-                                    </button>
                                     <div className="border-t border-secondary-100 mt-1"></div>
                                     <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center font-medium">
                                         <LogOut size={16} className="mr-2" /> Logout
