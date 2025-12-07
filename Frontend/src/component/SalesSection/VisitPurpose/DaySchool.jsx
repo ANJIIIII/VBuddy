@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import "../../../App.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getSubscriptionDetails } from "../../../store/slices/subscriptionSlice";
 import { addDaySchoolVisit } from "../../../store/slices/visitSlice";
+import PropTypes from "prop-types";
 
 const Hostel = ({ _id, visitPurposeDetails }) => {
-  const { isLoading, setIsLoading } = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const [planId, setPlanId] = useState("");
 
@@ -19,17 +20,16 @@ const Hostel = ({ _id, visitPurposeDetails }) => {
   });
 
   const navigate = useNavigate();
-  const numberofdays = watch("numberOfDays");
   const discount = watch("discount");
   const isSubscriptionAvailed = watch("isSubscriptionAvailed");
 
   const { subscriptionDetails } = useSelector((state) => state.subscription);
-  
+
   const onSubmit = (data) => {
-    
-    data.petId=_id;
-    data.planId=planId
-    data.visitType=visitPurposeDetails._id;
+
+    data.petId = _id;
+    data.planId = planId
+    data.visitType = visitPurposeDetails._id;
 
 
 
@@ -46,13 +46,15 @@ const Hostel = ({ _id, visitPurposeDetails }) => {
 
   useEffect(() => {
     const params = new URLSearchParams();
-    params.append("petId", _id.trim());
-    params.append("visitType", visitPurposeDetails._id.trim());
+    if (_id) params.append("petId", _id.trim());
+    if (visitPurposeDetails?._id) params.append("visitType", visitPurposeDetails._id.trim());
 
-  
+
     const queryString = params.toString();
-    dispatch(getSubscriptionDetails(queryString));
-  }, []);
+    if (queryString) {
+      dispatch(getSubscriptionDetails(queryString));
+    }
+  }, [dispatch, _id, visitPurposeDetails._id]);
 
   const handleAvail = (id) => {
     setPlanId(id);
@@ -62,7 +64,7 @@ const Hostel = ({ _id, visitPurposeDetails }) => {
   if (isLoading)
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full" />
       </div>
     );
 
@@ -141,13 +143,13 @@ const Hostel = ({ _id, visitPurposeDetails }) => {
               {isSubscriptionAvailed
                 ? 0
                 : (visitPurposeDetails.price - discount)
-                ? (visitPurposeDetails.price - discount) 
-                : 0}
+                  ? (visitPurposeDetails.price - discount)
+                  : 0}
             </div>
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
+            className="w-full bg-primary-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
           >
             Submit
           </button>
@@ -157,4 +159,13 @@ const Hostel = ({ _id, visitPurposeDetails }) => {
   );
 };
 
+Hostel.propTypes = {
+  _id: PropTypes.string.isRequired,
+  visitPurposeDetails: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+  }).isRequired,
+};
+
 export default Hostel;
+

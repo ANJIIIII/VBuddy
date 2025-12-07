@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { format } from "date-fns";
 import { useDispatch } from "react-redux";
 import { getPetsByRegistrationDate } from "../../store/slices/petSlice";
-import {logout} from "../../store/slices/authSlice"
 import PetDetails from "./petDetails";
 
 const PetManagement = () => {
@@ -14,10 +13,10 @@ const PetManagement = () => {
   const [selectedPetId, setSelectedPetId] = useState(null);
   const dispatch = useDispatch();
 
-  const fetchPets = async () => {
+  const fetchPets = useCallback(async () => {
     try {
       const formattedDate = format(selectedDate, "yyyy-MM-dd");
-      const response = await dispatch(getPetsByRegistrationDate(formattedDate))
+      const response = await dispatch(getPetsByRegistrationDate(formattedDate));
       const petList = response?.payload?.pets || [];
       setPets(petList);
       setFilteredPets(petList);
@@ -26,11 +25,11 @@ const PetManagement = () => {
     } catch (error) {
       console.error("Error fetching pets:", error);
     }
-  };
+  }, [dispatch, selectedDate]);
 
   useEffect(() => {
     fetchPets();
-  }, [selectedDate,dispatch]);
+  }, [fetchPets]);
 
   const handleSpeciesFilter = (species) => {
     setSelectedSpecies(species);
@@ -46,9 +45,9 @@ const PetManagement = () => {
 
   if (selectedPetId) {
     return (
-      <PetDetails 
-        petId={selectedPetId} 
-        onBack={() => setSelectedPetId(null)} 
+      <PetDetails
+        petId={selectedPetId}
+        onBack={() => setSelectedPetId(null)}
       />
     );
   }
@@ -68,11 +67,11 @@ const PetManagement = () => {
                 type="date"
                 value={format(selectedDate, "yyyy-MM-dd")}
                 onChange={(e) => setSelectedDate(new Date(e.target.value))}
-                className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
               />
               <button
                 onClick={() => setSelectedDate(new Date())}
-                className="px-6 py-2 bg-blue-950 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                className="px-6 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700 transition-colors"
               >
                 Today
               </button>
@@ -86,7 +85,7 @@ const PetManagement = () => {
               <select
                 value={selectedSpecies}
                 onChange={(e) => handleSpeciesFilter(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
               >
                 <option value="">All Species</option>
                 {uniqueSpecies.map((species) => (

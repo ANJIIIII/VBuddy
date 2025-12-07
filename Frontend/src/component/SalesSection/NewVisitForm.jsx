@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Inquiry from "./VisitPurpose/Inquiry";
 import DogPark from "./VisitPurpose/DogPark";
@@ -11,7 +11,7 @@ import Shop from "./VisitPurpose/Shop";
 import Veterinary from "./VisitPurpose/Veterinary";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllSubscription } from "../../store/slices/subscriptionSlice";
-import {getAllPrices} from "../../store/slices/visitSlice"
+import { getAllPrices } from "../../store/slices/visitSlice"
 
 const NewVisitForm = () => {
   const purposes = [
@@ -31,43 +31,42 @@ const NewVisitForm = () => {
   const dispatch = useDispatch();
   const { subscriptions } = useSelector((state) => state.subscription);
   const { prices } = useSelector((state) => state.visits);
- 
+
 
   const [purpose, setPurpose] = useState("Select");
-  const { _id } = location?.state || "";
+  const _id = location?.state?._id;
 
   const showForm = () => {
-    const selectedSubscription = subscriptions.find(
-      (sub) => sub.subscriptionType === purpose
-    );
+    // const selectedSubscription = subscriptions.find(
+    //   (sub) => sub.subscriptionType === purpose
+    // );
+    // planId logic removed as children don't use it or fetch it themselves
 
     const VisitPurposePrice = prices?.length
-    ? prices.find((p) => p.purpose === purpose)
-    : null;
-
-    const planId = selectedSubscription ? selectedSubscription._id : null;
+      ? prices.find((p) => p.purpose === purpose)
+      : null;
 
     switch (purpose) {
       case "Select":
         return <div>Select a pupose</div>;
       case "Inquiry":
-        return <Inquiry _id={_id} priceDetail={VisitPurposePrice} />;
+        return <Inquiry _id={_id} visitPurposeDetails={VisitPurposePrice} />;
       case "Dog Park":
-        return <DogPark _id={_id}  priceDetail={VisitPurposePrice}/>;
+        return <DogPark _id={_id} visitPurposeDetails={VisitPurposePrice} />;
       case "Veterinary":
-        return <Veterinary _id={_id} priceDetail={VisitPurposePrice} />;
+        return <Veterinary _id={_id} visitPurposeDetails={VisitPurposePrice} />;
       case "Hostel":
-        return <Hostel _id={_id} planId={planId} priceDetail={VisitPurposePrice} />;
+        return <Hostel _id={_id} visitPurposeDetails={VisitPurposePrice} />;
       case "Day Care":
-        return <DayCare _id={_id} priceDetail={VisitPurposePrice} />;
+        return <DayCare _id={_id} visitPurposeDetails={VisitPurposePrice} />;
       case "Day School":
-        return <DaySchool _id={_id} planId={planId} priceDetail={VisitPurposePrice} />;
+        return <DaySchool _id={_id} visitPurposeDetails={VisitPurposePrice} />;
       case "Play School":
-        return <PlaySchool _id={_id} planId={planId} priceDetail={VisitPurposePrice}/>;
+        return <PlaySchool _id={_id} visitPurposeDetails={VisitPurposePrice} />;
       case "Grooming":
-        return <Grooming _id={_id} priceDetail={VisitPurposePrice} />;
+        return <Grooming _id={_id} visitPurposeDetails={VisitPurposePrice} />;
       case "Shop":
-        return <Shop _id={_id} priceDetail={VisitPurposePrice} />;
+        return <Shop _id={_id} visitPurposeDetails={VisitPurposePrice} />;
       default:
         return <div>Invalid Selection</div>;
     }
@@ -76,9 +75,8 @@ const NewVisitForm = () => {
   useEffect(() => {
     dispatch(getAllSubscription());
     dispatch(getAllPrices());
-  }, []);
+  }, [dispatch]);
 
-  useEffect(() => {}, []);
   return (
     <div className="w-full flex justify-center">
       <div className="bg-white rounded-lg p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto">

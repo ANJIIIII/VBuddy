@@ -5,6 +5,7 @@ import {
   sendReminders,
 } from "../../store/slices/remindersSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { Bell, Calendar } from "lucide-react";
 
 const NewReminders = () => {
   const { List } = useSelector((state) => state.reminders);
@@ -13,7 +14,7 @@ const NewReminders = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const remindAll = () => {
-    
+
     setIsLoading(true);
     dispatch(sendReminders(date))
       .then((data) => {
@@ -31,7 +32,7 @@ const NewReminders = () => {
       setIsLoading(true);
       dispatch(getRemindersList(date))
         .then((data) => {
-          
+
         })
         .finally(() => {
           setIsLoading(false);
@@ -41,80 +42,93 @@ const NewReminders = () => {
     return () => clearTimeout(timeout);
   }, [date, dispatch]);
   return (
-    <>
-      <h1 className="text-center font-bold mt-10 text-5xl">REMINDERS</h1>
-      <div className="mt-10 flex gap-5 justify-evenly">
-        <div className="tracking-widest">Choose Date</div>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setdate(e.target.value)}
-        />
-      </div>
-      {isLoading ? (
-        <div className="flex justify-center items-center h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    <div className="min-h-screen bg-secondary-50/30 p-4 md:p-8 animate-in fade-in">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+
+          {/* Date Panel on Left */}
+          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-secondary-200 shadow-sm w-full md:w-auto">
+            <Calendar size={18} className="text-secondary-400" />
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setdate(e.target.value)}
+              className="text-sm font-medium text-secondary-700 outline-none w-full"
+            />
+          </div>
+
+          {/* Remind All Button on Right */}
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto justify-end">
+            <button
+              onClick={remindAll}
+              disabled={isLoading || !List || List.length === 0}
+              className="flex items-center justify-center gap-2 px-6 py-2 bg-secondary-900 text-white rounded-lg hover:bg-secondary-800 transition-all shadow-md shadow-secondary-900/20 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed w-full md:w-auto"
+            >
+              <Bell size={18} />
+              Remind All
+            </button>
+          </div>
         </div>
-      ) : (
-        <div className="w-[90%] mx-auto">
-          {!List || List?.length === 0 ? (
-            <div className="w-full p-6 mt-5 mx-auto text-gray-800 rounded-lg shadow-md">
-              <p className="text-center tracking-widest text-lg font-semibold">
-                No Reminders for Choosen Date
-              </p>
-            </div>
-          ) : (
-            <div className="w-full overflow-x-scroll hidescroller  mx-auto mt-5 text-[12px] lg:text-[15px] flex flex-col gap-y-4 items-center justify-center">
-              <table className="min-w-full table-auto rounded-lg shadow-md">
-                <thead>
-                  <tr className="bg-[#172554] text-white text-left">
-                    <th className="px-6 py-3 text-center">No.</th>
-                    <th className="px-6 py-3 text-center">Pet Name</th>
-                    <th className="px-6 py-3 text-center">Owner Name</th>
-                    <th className="px-6 py-3 text-center">Contact</th>
-                    <th className="px-6 py-3 text-center">Purpose</th>
-                    <th className="px-6 py-3 text-center">Scheduled Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {List?.map((item, idx) => {
-                    return (
-                      <tr className="bg-white" key={idx}>
-                        <td className="px-6 py-4 text-center">{idx + 1}</td>
-                        <td className="px-6 py-4 text-center">
-                          {item?.petName}
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          {item?.ownerName}
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          {item?.contact}
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          {item?.purpose}
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          {item?.scheduledDate?.substring(0, 10) || "NA"}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-              <div className="w-full flex justify-center items-center">
-                <button
-                  onClick={remindAll}
-                  disabled={isLoading}
-                  className="bg-[#172554] px-5  py-2 rounded-md text-white mt-4"
-                >
-                  Remind All
-                </button>
+
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64 bg-white rounded-xl shadow-sm border border-secondary-200">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-500 border-t-transparent"></div>
+          </div>
+        ) : (
+          <div className="bg-white rounded-xl shadow-sm border border-secondary-200 overflow-hidden">
+            {!List || List?.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-secondary-400">
+                <Bell size={48} className="mb-4 opacity-20" />
+                <p className="text-lg font-medium text-secondary-600">No Reminders for Chosen Date</p>
               </div>
-            </div>
-          )}
-        </div>
-      )}
-    </>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-secondary-900 border-b border-secondary-100 text-xs uppercase tracking-wider text-white font-semibold">
+                      <th className="px-6 py-4 text-center">No.</th>
+                      <th className="px-6 py-4 text-center">Pet Name</th>
+                      <th className="px-6 py-4 text-center">Owner Name</th>
+                      <th className="px-6 py-4 text-center">Contact</th>
+                      <th className="px-6 py-4 text-center">Purpose</th>
+                      <th className="px-6 py-4 text-center">Scheduled Date</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-secondary-100">
+                    {List?.map((item, idx) => {
+                      return (
+                        <tr className="hover:bg-secondary-50/50 transition-colors" key={idx}>
+                          <td className="px-6 py-4 text-center">{idx + 1}</td>
+                          <td className="px-6 py-4 text-center font-medium text-secondary-900">
+                            {item?.petName}
+                          </td>
+                          <td className="px-6 py-4 text-center text-secondary-700">
+                            {item?.ownerName}
+                          </td>
+                          <td className="px-6 py-4 text-center text-secondary-500">
+                            {item?.contact}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-50 text-primary-700 border border-primary-100">
+                              {item?.purpose}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-center text-secondary-500">
+                            {item?.scheduledDate?.substring(0, 10) || "NA"}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

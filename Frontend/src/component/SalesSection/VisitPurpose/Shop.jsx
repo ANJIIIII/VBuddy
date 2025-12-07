@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { addShoppingVisit } from "../../../store/slices/visitSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const Shop = ({ _id, visitPurposeDetails }) => {
   const [items, setItems] = useState([{ name: "", price: 0 }]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const dispatch=useDispatch();
-  const navigate=useNavigate();
-  const [isLoading,setIsLoading]=useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (index, field, value) => {
     const newItems = [...items];
@@ -37,8 +38,8 @@ const Shop = ({ _id, visitPurposeDetails }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data={};
-    data.items=items
+    const data = {};
+    data.items = items
     data.petId = _id;
     data.visitType = visitPurposeDetails._id;
 
@@ -101,7 +102,7 @@ const Shop = ({ _id, visitPurposeDetails }) => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full mt-4 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+          className="w-full mt-4 bg-primary-500 text-white p-2 rounded-md hover:bg-primary-600"
         >
           Submit
         </button>
@@ -110,4 +111,12 @@ const Shop = ({ _id, visitPurposeDetails }) => {
   );
 };
 
+Shop.propTypes = {
+  _id: PropTypes.string.isRequired,
+  visitPurposeDetails: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
 export default Shop;
+

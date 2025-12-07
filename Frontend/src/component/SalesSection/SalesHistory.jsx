@@ -1,32 +1,31 @@
-import React, { useEffect, useState } from "react";
-
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import VisitHistoryDetails from "./VisitHistoryDetails";
-
 import { getVisitList } from "../../store/slices/visitSlice";
+import { ArrowLeft, Search, Calendar, User, Phone, DollarSign, Filter } from "lucide-react";
 
 const SalesHistory = () => {
-  const [date, setdate] = useState(new Date().toISOString().split("T")[0]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [name, setName] = useState("");
   const [purpose, setPurpose] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [visitdetails, setvisitdetails] = useState(null);
+  const [visitDetails, setVisitDetails] = useState(null);
   const [list, setList] = useState([]);
 
-
-
   const onClose = () => {
-    setvisitdetails(null);
+    setVisitDetails(null);
   };
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     let timeout = setTimeout(() => {
       const params = new URLSearchParams();
-      params.append("name", name.trim());
-      params.append("purpose", purpose.trim());
-      params.append("date", date.trim());
+      if (name) params.append("name", name.trim());
+      if (purpose) params.append("purpose", purpose.trim());
+      if (date) params.append("date", date.trim());
       const queryString = params.toString();
 
       setIsLoading(true);
@@ -43,105 +42,134 @@ const SalesHistory = () => {
     return () => clearTimeout(timeout);
   }, [name, purpose, date, dispatch]);
 
-  if (visitdetails) {
-    
-    return (
-      <VisitHistoryDetails visitdetails={visitdetails} onClose={onClose} />
-    );
+  if (visitDetails) {
+    return <VisitHistoryDetails visitdetails={visitDetails} onClose={onClose} />;
   }
+
   return (
-    <div className="w-screen flex flex-col mt-10 justify-center items-center">
-      <h2 className="text-4xl sm:text-3xl tracking-widest md:text-4xl font-semibold text-black text-center py-4">
-        Visit History
-      </h2>
-      <div className="w-[90vw] mx-auto">
-        <div className="w-full flex justify-between">
-          <input
-            type="text"
-            value={name}
-            placeholder="Pet name"
-            onChange={(e) => setName(e.target.value)}
-            className="w-[50%] p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300"
-          />
-          <input
-            type="text"
-            placeholder="Purpose"
-            value={purpose}
-            onChange={(e) => setPurpose(e.target.value)}
-            className="w-[49%] p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300"
-          />
-        </div>
-        <div className="mt-5 w-[50%] mx-auto flex gap-5 justify-evenly">
-          <div className="tracking-widest">Choose Date</div>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setdate(e.target.value)}
-          />
-        </div>
-      </div>
-      {isLoading ? (
-        <div className="flex justify-center items-center h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      ) : (
-        <div className="w-full">
-          {!list || list?.length === 0 ? (
-            <div className="w-[90%] p-6 mt-5 mx-auto  text-gray-800 rounded-lg shadow-md">
-              <p className="text-center tracking-widest text-lg font-semibold">
-                No visit was recorded on this date
-              </p>
+    <div className="min-h-screen bg-secondary-50/30 p-4 md:p-8 animate-in fade-in">
+      <div className="max-w-6xl mx-auto">
+
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2 rounded-full bg-white border border-secondary-200 text-secondary-600 hover:text-primary-600 hover:border-primary-200 transition-all shadow-sm"
+              aria-label="Go Back"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <div>
+              <h1 className="text-2xl font-bold text-secondary-900">Sales History</h1>
+              <p className="text-secondary-500 text-sm">Track daily visits and revenue</p>
             </div>
-          ) : (
-            <div className="w-[95%] mx-auto mt-6 text-sm lg:text-base flex flex-col gap-y-4 items-center justify-center">
-              <div className="overflow-x-auto w-full">
-                <table className="min-w-full table-auto rounded-lg shadow-md">
+          </div>
+
+          {/* Date Picker */}
+          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-secondary-200 shadow-sm">
+            <Calendar size={18} className="text-secondary-400" />
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="text-sm font-medium text-secondary-700 outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-2.5 text-secondary-400 w-4 h-4" />
+            <input
+              type="text"
+              value={name}
+              placeholder="Search by Pet Name..."
+              onChange={(e) => setName(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 bg-white border border-secondary-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"
+            />
+          </div>
+          <div className="relative">
+            <Filter className="absolute left-3 top-2.5 text-secondary-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Filter by Purpose..."
+              value={purpose}
+              onChange={(e) => setPurpose(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 bg-white border border-secondary-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Content */}
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64 bg-white rounded-xl shadow-sm border border-secondary-200">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-500 border-t-transparent"></div>
+          </div>
+        ) : (
+          <div className="bg-white rounded-xl shadow-sm border border-secondary-200 overflow-hidden">
+            {!list || list.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-secondary-400">
+                <Calendar size={48} className="mb-4 opacity-20" />
+                <p className="text-lg font-medium text-secondary-600">No records found</p>
+                <p className="text-sm">Try adjusting your filters or date.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-[#172554] text-white text-left">
-                      <th className="px-6 py-3 text-center">Pet Name</th>
-                      <th className="px-6 py-3 text-center">Species</th>
-                      <th className="px-6 py-3 text-center">Owner Name</th>
-                      <th className="px-6 py-3 text-center">Contact</th>
-                      <th className="px-6 py-3 text-center">Purpose</th>
-                      <th className="px-6 py-3 text-center">Price</th>
+                    <tr className="bg-secondary-50 border-b border-secondary-100 text-xs uppercase tracking-wider text-secondary-500 font-semibold">
+                      <th className="px-6 py-4">Pet Details</th>
+                      <th className="px-6 py-4">Owner</th>
+                      <th className="px-6 py-4">Purpose</th>
+                      <th className="px-6 py-4 text-right">Price</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {list?.map((item, idx) => {
-                      return (
-                        <tr
-                          onClick={() => setvisitdetails(item)}
-                          key={idx}
-                          className="bg-white border-b border-[#E0E0E0 cursor-pointer"
-                        >
-                          <td className="px-6 py-4 text-center">
-                            {item?.pet?.name}
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            {item?.pet?.species}
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            {item?.pet?.owner?.name || ""}
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            {item?.pet?.owner?.phone || ""}
-                          </td>
-                          <td className="px-6 py-4 text-center">
+                  <tbody className="divide-y divide-secondary-100">
+                    {list.map((item, idx) => (
+                      <tr
+                        key={idx}
+                        onClick={() => setVisitDetails(item)}
+                        className="hover:bg-secondary-50/50 transition-colors cursor-pointer group"
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex flex-col">
+                            <span className="font-semibold text-secondary-900">{item?.pet?.name}</span>
+                            <span className="text-xs text-secondary-500">{item?.pet?.species}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex flex-col gap-1">
+                            <span className="flex items-center gap-1.5 text-sm font-medium text-secondary-700">
+                              <User size={14} className="text-secondary-400" />
+                              {item?.pet?.owner?.name || "N/A"}
+                            </span>
+                            <span className="flex items-center gap-1.5 text-xs text-secondary-500">
+                              <Phone size={12} className="text-secondary-400" />
+                              {item?.pet?.owner?.phone || "N/A"}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-50 text-primary-700 border border-primary-100">
                             {item?.visitType?.purpose}
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            {item?.details?.price || 0}
-                          </td>
-                        </tr>
-                      );
-                    })}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <span className="font-bold text-secondary-900 flex items-center justify-end">
+                            ₹{(item?.details?.price || 0).toLocaleString('en-IN')}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -82,7 +82,7 @@ exports.signUp = async (req, res) => {
 
   } catch (error) {
     console.log("Error in register controller:", error.message);
-    
+
     // Handle duplicate key error
     if (error.code === 11000) {
       return res.status(400).json({
@@ -112,12 +112,12 @@ exports.signUp = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email,password)
+
     const user = await User.findOne({ email });
 
     const isPasswordCorrect = await bcrypt.compare(
       password,
-      user?.password || "" 
+      user?.password || ""
     );
 
     if (!user || !isPasswordCorrect) {
@@ -136,11 +136,11 @@ exports.login = async (req, res) => {
         email: user.email,
         role: user.role,
       },
-	  token
+      token
     });
 
   } catch (error) {
     console.log("Error in login controller", error.message);
-    res.status(500).json({success:false, message: "Internal Server Error" });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };

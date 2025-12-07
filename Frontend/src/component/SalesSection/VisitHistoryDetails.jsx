@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { useDispatch } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
+import PropTypes from "prop-types";
 
 const VisitHistoryDetails = ({ visitdetails, onClose }) => {
   const [visitDetail, setVisitDetail] = useState(null);
   const [subscriptionTypeValue, setSubscriptionTypeValue] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
   // Set loading to false if visitdetails is null or undefined
@@ -89,8 +91,8 @@ const VisitHistoryDetails = ({ visitdetails, onClose }) => {
         typeof visitdetails._id !== "string" ||
         visitdetails._id.length !== 24
       ) {
-        if (visitdetails?.visitType?.purpose === "Buy Subscription" || 
-            visitdetails?.visitType?.purpose === "Renew Subscription") {
+        if (visitdetails?.visitType?.purpose === "Buy Subscription" ||
+          visitdetails?.visitType?.purpose === "Renew Subscription") {
           setError("Invalid subscription data");
         }
         return;
@@ -143,16 +145,16 @@ const VisitHistoryDetails = ({ visitdetails, onClose }) => {
       }
     };
 
-    if (visitdetails?.visitType?.purpose === "Buy Subscription" || 
-        visitdetails?.visitType?.purpose === "Renew Subscription") {
+    if (visitdetails?.visitType?.purpose === "Buy Subscription" ||
+      visitdetails?.visitType?.purpose === "Renew Subscription") {
       fetchBuySubscriptionDetail();
     }
   }, [visitdetails, dispatch]);
-  
+
   const formatDate = (dateString) => {
     try {
       return format(new Date(dateString), "d MMM yyyy");
-    } catch (error) {
+    } catch {
       return "Unknown Date";
     }
   };
@@ -214,9 +216,9 @@ const VisitHistoryDetails = ({ visitdetails, onClose }) => {
             <span className="font-semibold">Age:</span>{" "}
             {details?.pet?.dob
               ? `${Math.floor(
-                  (new Date() - new Date(details.pet.dob)) /
-                    (365.25 * 24 * 60 * 60 * 1000)
-                )} years`
+                (new Date() - new Date(details.pet.dob)) /
+                (365.25 * 24 * 60 * 60 * 1000)
+              )} years`
               : "Unknown"}
           </div>
           <div>
@@ -246,7 +248,6 @@ const VisitHistoryDetails = ({ visitdetails, onClose }) => {
             </h3>
             <div className="space-y-2">
               {details.details.vaccines.map((vaccine, index) => {
-                const vaccineId = vaccine.id || vaccine.vaccineId;
                 return (
                   <div
                     key={index}
@@ -285,7 +286,6 @@ const VisitHistoryDetails = ({ visitdetails, onClose }) => {
               </h3>
               <div className="space-y-2">
                 {details.details.medicines.map((med, index) => {
-                  const medicineId = med.id || med.medicineId;
                   return (
                     <div
                       key={index}
@@ -531,12 +531,12 @@ const VisitHistoryDetails = ({ visitdetails, onClose }) => {
               details?.visitType?.purpose
                 ?.toLowerCase()
                 ?.includes("renew")) && (
-              <div className="col-span-2 mt-2 pt-2 border-t border-green-200">
-                <div className="text-sm font-medium text-green-700 mb-1">
-                  This is a subscription renewal.
+                <div className="col-span-2 mt-2 pt-2 border-t border-green-200">
+                  <div className="text-sm font-medium text-green-700 mb-1">
+                    This is a subscription renewal.
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
       </div>
@@ -693,6 +693,43 @@ const VisitHistoryDetails = ({ visitdetails, onClose }) => {
       </div>
     </div>
   );
+};
+
+VisitHistoryDetails.propTypes = {
+  visitdetails: PropTypes.shape({
+    _id: PropTypes.string,
+    createdAt: PropTypes.string,
+    visitType: PropTypes.shape({
+      purpose: PropTypes.string,
+      price: PropTypes.number,
+      halfdayPrice: PropTypes.number,
+    }),
+    pet: PropTypes.shape({
+      name: PropTypes.string,
+      species: PropTypes.string,
+      breed: PropTypes.string,
+      color: PropTypes.string,
+      dob: PropTypes.string,
+      owner: PropTypes.shape({
+        name: PropTypes.string,
+        phone: PropTypes.string,
+      }),
+    }),
+    details: PropTypes.shape({
+      price: PropTypes.number,
+      discount: PropTypes.number,
+      customerType: PropTypes.string,
+      numberOfDays: PropTypes.number,
+      isSubscriptionAvailed: PropTypes.bool,
+      purpose: PropTypes.string,
+      medicines: PropTypes.arrayOf(PropTypes.object),
+      vaccines: PropTypes.arrayOf(PropTypes.object),
+      items: PropTypes.arrayOf(PropTypes.object),
+      nextFollowUp: PropTypes.string,
+      followUpPurpose: PropTypes.string,
+    }),
+  }),
+  onClose: PropTypes.func.isRequired,
 };
 
 export default VisitHistoryDetails;

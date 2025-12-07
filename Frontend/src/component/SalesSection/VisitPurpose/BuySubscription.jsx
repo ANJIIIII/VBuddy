@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import {
   buySubscription,
@@ -8,10 +9,9 @@ import {
 } from "../../../store/slices/subscriptionSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-const BuySubscription = ({_id,visitPurposeDetails}) => {
+const BuySubscription = ({ _id, visitPurposeDetails }) => {
   const { subscriptions } = useSelector((state) => state.subscription);
-  const { petDetails } = useSelector((state) => state.pets);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -31,7 +31,7 @@ const BuySubscription = ({_id,visitPurposeDetails}) => {
 
   const onSubmit = (data) => {
     data.petId = _id;
-    data.visitType=visitPurposeDetails._id
+    data.visitType = visitPurposeDetails._id
     dispatch(buySubscription(data))
       .then((data) => {
         setIsLoading(true);
@@ -56,15 +56,19 @@ const BuySubscription = ({_id,visitPurposeDetails}) => {
   };
 
   useEffect(() => {
-    dispatch(getAllSubscription()).then((data) => {
-      if (data?.payload?.success) setValue("planId", subscriptions[0]?._id);
-    });
+    dispatch(getAllSubscription());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (subscriptions && subscriptions.length > 0) {
+      setValue("planId", subscriptions[0]?._id);
+    }
+  }, [subscriptions, setValue]);
 
   if (isLoading)
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full" />
       </div>
     );
 
@@ -113,7 +117,7 @@ const BuySubscription = ({_id,visitPurposeDetails}) => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
+          className="w-full bg-primary-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
         >
           Submit
         </button>
@@ -122,4 +126,12 @@ const BuySubscription = ({_id,visitPurposeDetails}) => {
   );
 };
 
+BuySubscription.propTypes = {
+  _id: PropTypes.string.isRequired,
+  visitPurposeDetails: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
 export default BuySubscription;
+

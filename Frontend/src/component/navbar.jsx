@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, LogOut, LayoutDashboard } from "lucide-react";
+import { LogOut, LayoutDashboard } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/slices/authSlice";
 
@@ -8,7 +8,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [open, setOpen] = useState(false);
-  
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -27,13 +27,13 @@ const Navbar = () => {
           {/* Logo - Left */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center space-x-2">
-              <div 
+              <div
                 className="w-10 h-10 rounded-full flex items-center justify-center text-xl"
                 style={{ backgroundColor: "#DFD0B8" }}
               >
                 🐾
               </div>
-              <span 
+              <span
                 className="text-xl font-bold hidden sm:block"
                 style={{ color: "#DFD0B8" }}
               >
@@ -44,17 +44,17 @@ const Navbar = () => {
 
           {/* Desktop Navigation Links - Center */}
           <div className="hidden md:flex items-center space-x-1 absolute left-1/2 transform -translate-x-1/2">
-            
+
 
             {isAuthenticated && (
               <>
-              <Link
-              to="/"
-              className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10"
-              style={{ color: "#DFD0B8" }}
-            >
-              Home
-            </Link>
+                <Link
+                  to="/"
+                  className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10"
+                  style={{ color: "#DFD0B8" }}
+                >
+                  Home
+                </Link>
                 <Link
                   to="/deboard"
                   className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10"
@@ -109,23 +109,23 @@ const Navbar = () => {
                     style={{ color: "white" }}
                     viewBox="0 0 448 512"
                   >
-                    <path 
+                    <path
                       fill="currentColor"
-                      d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464l349.5 0c-8.9-63.3-63.3-112-129-112l-91.4 0c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3z" 
+                      d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464l349.5 0c-8.9-63.3-63.3-112-129-112l-91.4 0c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3z"
                     />
                   </svg>
                 </button>
                 {open && (
-                  <div 
+                  <div
                     className="absolute z-50 right-0 mt-2 w-48 rounded-lg shadow-lg border"
-                    style={{ 
+                    style={{
                       backgroundColor: "white",
                       borderColor: "#948979"
                     }}
                     onClick={() => setOpen(!open)}
                   >
-                    <button 
-                      onClick={() => navigate("/dashboard")} 
+                    <button
+                      onClick={() => navigate("/dashboard")}
                       className="flex items-center w-full px-4 py-3 text-left transition-colors duration-200 rounded-t-lg"
                       style={{ color: "#222831" }}
                       onMouseEnter={(e) => {
@@ -135,11 +135,11 @@ const Navbar = () => {
                         e.target.style.backgroundColor = "transparent";
                       }}
                     >
-                      <LayoutDashboard className="w-4 h-4 mr-3" /> 
+                      <LayoutDashboard className="w-4 h-4 mr-3" />
                       Dashboard
                     </button>
                     <hr style={{ borderColor: "#DFD0B8" }} />
-                    <button 
+                    <button
                       className="flex items-center w-full px-4 py-3 text-left transition-colors duration-200 rounded-b-lg"
                       style={{ color: "#222831" }}
                       onClick={handleLogout}
@@ -150,7 +150,7 @@ const Navbar = () => {
                         e.target.style.backgroundColor = "transparent";
                       }}
                     >
-                      <LogOut className="w-4 h-4 mr-3" /> 
+                      <LogOut className="w-4 h-4 mr-3" />
                       Logout
                     </button>
                   </div>
@@ -158,13 +158,13 @@ const Navbar = () => {
               </div>
             ) : (
               <>
-              <Link
-              to="/"
-              className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10"
-              style={{ color: "#DFD0B8" }}
-            >
-              Home
-            </Link>
+                <Link
+                  to="/"
+                  className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10"
+                  style={{ color: "#DFD0B8" }}
+                >
+                  Home
+                </Link>
                 <Link
                   to="/signup"
                   className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10"
@@ -220,9 +220,9 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div 
+        <div
           className="md:hidden border-t"
-          style={{ 
+          style={{
             backgroundColor: "#222831",
             borderColor: "#948979"
           }}
@@ -321,7 +321,7 @@ const Navbar = () => {
               >
                 Dashboard
               </Link>
-              <button 
+              <button
                 className="flex items-center w-full px-3 py-2 rounded-lg text-base font-medium transition-all duration-200"
                 style={{ color: "#DFD0B8" }}
                 onClick={handleLogout}
@@ -332,7 +332,7 @@ const Navbar = () => {
                   e.target.style.backgroundColor = "transparent";
                 }}
               >
-                <LogOut className="w-4 h-4 mr-3" /> 
+                <LogOut className="w-4 h-4 mr-3" />
                 Logout
               </button>
             </div>

@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { format } from "date-fns";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import VaccinationPopup from "./PetOwnerMaster/VaccinationPopup";
 
@@ -23,8 +22,7 @@ export default function PetManagement() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [visitHistory, setVisitHistory] = useState([]);
-   const [isOpen, setIsOpen] = useState(false);
-   const [others, setOthers]=useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   const dispatch = useDispatch();
   const [min, setMin] = useState();
@@ -52,31 +50,33 @@ export default function PetManagement() {
   ];
 
   // Fetch inventory data
-  const fetchInventory = async () => {
+  const fetchInventory = useCallback(async () => {
     dispatch(getAllInventory());
-  };
+  }, [dispatch]);
 
-  const fetchPets = async () => {
+  const fetchPets = useCallback(async () => {
+    setLoading(true);
     const formattedDate = format(selectedDate, "yyyy-MM-dd");
     dispatch(getPetsByRegistrationDate(formattedDate)).then((data) => {
-      
+
       setPets(data?.payload?.pets || []);
       const species = [
-        ...new Set(data?.payload?.pets.map((pet) => pet.species)),
+        ...new Set(data?.payload?.pets?.map((pet) => pet.species) || []),
       ];
       setUniqueSpecies(species);
-      setFilteredPets(data?.payload?.pets);
+      setFilteredPets(data?.payload?.pets || []);
+      setLoading(false);
     });
-  };
+  }, [dispatch, selectedDate]);
 
   const fetchVisitHistory = async (petId) => {
     dispatch(getPetHistory(petId))
       .then((data) => {
-       
+
         setVisitHistory(data?.payload?.visits)
       })
-      .catch((err) => {
-      
+      .catch(() => {
+        // error handled silently or add error state update here
       });
   };
 
@@ -84,8 +84,8 @@ export default function PetManagement() {
     setSelectedSpecies(species);
     const filtered = species
       ? pets.filter(
-          (pet) => pet.species.toLowerCase() === species.toLowerCase()
-        )
+        (pet) => pet.species.toLowerCase() === species.toLowerCase()
+      )
       : pets;
     setFilteredPets(filtered);
   };
@@ -116,7 +116,7 @@ export default function PetManagement() {
 
     updatedItemDetails[index][field] = value;
 
-   
+
     setVisitForm((prev) => ({ ...prev, itemDetails: updatedItemDetails }));
   };
 
@@ -160,20 +160,20 @@ export default function PetManagement() {
 
       const updatedItemDetails = tempItemDetails.map((item) => {
         const newItem = { ...item };
-        delete newItem.maxVolume; 
+        delete newItem.maxVolume;
         return newItem;
       });
 
-      setVisitForm((visitForm)=>({...visitForm,itemDetails:[...updatedItemDetails]}));
-      
-      
+      setVisitForm((visitForm) => ({ ...visitForm, itemDetails: [...updatedItemDetails] }));
+
+
       formData["petId"] = selectedPet._id;
       formData["visitForm"] = visitForm;
 
       formData["totalPrice"] = totalPrice;
 
-      dispatch(addVisit(formData)).then((data) => {
-       
+      dispatch(addVisit(formData)).then(() => {
+        // success
       });
       alert("Visit saved successfully!");
     } catch (err) {
@@ -194,7 +194,7 @@ export default function PetManagement() {
     const formattedDate = today.toISOString().split("T")[0]; // Format to YYYY-MM-DD
 
     setMin(formattedDate);
-  }, [selectedDate]);
+  }, [fetchPets, fetchInventory]); // Added dependencies
 
   return (
     <div className="container mx-auto p-4">
@@ -215,11 +215,11 @@ export default function PetManagement() {
                 type="date"
                 value={format(selectedDate, "yyyy-MM-dd")}
                 onChange={(e) => setSelectedDate(new Date(e.target.value))}
-                className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
               />
               <button
                 onClick={() => setSelectedDate(new Date())}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
               >
                 Today
               </button>
@@ -233,7 +233,7 @@ export default function PetManagement() {
               <select
                 value={selectedSpecies}
                 onChange={(e) => handleSpeciesFilter(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
               >
                 <option value="">All Species</option>
                 {uniqueSpecies.map((species) => (
@@ -247,7 +247,7 @@ export default function PetManagement() {
             {/* Pet List */}
             {loading ? (
               <div className="flex justify-center py-8">
-                <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+                <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full" />
               </div>
             ) : filteredPets?.length > 0 ? (
               <div className="space-y-2">
@@ -255,11 +255,10 @@ export default function PetManagement() {
                   <button
                     key={pet._id}
                     onClick={() => handlePetSelect(pet._id)}
-                    className={`w-full text-left p-4 rounded-lg border transition-colors ${
-                      selectedPet?._id === pet._id
-                        ? "border-blue-500 bg-blue-50"
-                        : "hover:bg-gray-50"
-                    }`}
+                    className={`w-full text-left p-4 rounded-lg border transition-colors ${selectedPet?._id === pet._id
+                      ? "border-primary-500 bg-primary-50"
+                      : "hover:bg-gray-50"
+                      }`}
                   >
                     <div className="font-medium">{pet.name}</div>
                     <div className="text-sm text-gray-500">
@@ -343,7 +342,7 @@ export default function PetManagement() {
                   selectedPet?.vaccinations.length > 0 && (
                     <div
                       className=""
-                      
+
                       onClick={() => setIsOpen(true)}
                     >
                       <p className="font-medium">
@@ -410,7 +409,7 @@ export default function PetManagement() {
                     }))
                   }
                   required
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
                 >
                   <option value="">Select a purpose</option>
                   {purposes.map((purpose) => (
@@ -423,8 +422,8 @@ export default function PetManagement() {
                   <div>
                     <textarea
                       placeholder="Write the purpose"
-                      
-                      className="pl-5 pt-2 border rounded-lg focus:ring-2 focus:ring-blue-500 w-full mt-5"
+
+                      className="pl-5 pt-2 border rounded-lg focus:ring-2 focus:ring-primary-500 w-full mt-5"
                       type="text"
                     />
                   </div>
@@ -497,7 +496,7 @@ export default function PetManagement() {
                 <button
                   type="button"
                   onClick={addItemRow}
-                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg"
+                  className="mt-2 px-4 py-2 bg-primary-500 text-white rounded-lg"
                 >
                   Add Item
                 </button>
@@ -520,7 +519,7 @@ export default function PetManagement() {
                       }))
                     }
                     required
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
@@ -538,7 +537,7 @@ export default function PetManagement() {
                       }))
                     }
                     required
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
               </div>
@@ -557,7 +556,7 @@ export default function PetManagement() {
                     }))
                   }
                   required
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
                   placeholder="Specify follow-up purpose"
                 />
               </div>
@@ -576,7 +575,7 @@ export default function PetManagement() {
                     }))
                   }
                   required
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
                 >
                   <option value="NGO">NGO</option>
                   <option value="Customer">Customer</option>
@@ -593,11 +592,10 @@ export default function PetManagement() {
               <div className="pt-4">
                 <button
                   type="submit"
-                  className={`w-full py-3 rounded-lg text-white font-medium ${
-                    visitForm.itemDetails.length === 0
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-green-500 hover:bg-green-600 transition-colors"
-                  }`}
+                  className={`w-full py-3 rounded-lg text-white font-medium ${visitForm.itemDetails.length === 0
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-primary-500 hover:bg-primary-600 transition-colors"
+                    }`}
                   disabled={visitForm.itemDetails.length === 0}
                 >
                   Save Visit
@@ -607,6 +605,7 @@ export default function PetManagement() {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
+

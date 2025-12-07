@@ -31,7 +31,7 @@ const EditInventory = () => {
         if (data?.payload?.success) setFormData(data?.payload?.item);
       })
       .catch((err) => {
-      
+
       });
   };
 
@@ -65,11 +65,10 @@ const EditInventory = () => {
   if (editInventoryLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
       </div>
     );
   }
-
   return (
     <div className="max-w-2xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4">Edit Inventory Item</h2>
@@ -184,15 +183,14 @@ const EditInventory = () => {
             className="w-full p-2 border rounded"
           />
         </div>
-
         <button
           type="submit"
-          className="w-full bg-blue-950 text-white p-2 rounded hover:bg-blue-600"
+          className="w-full bg-secondary-600 text-white p-2 rounded hover:bg-secondary-700"
         >
           Edit Item
         </button>
-      </form>
-    </div>
+      </form >
+    </div >
   );
 };
 

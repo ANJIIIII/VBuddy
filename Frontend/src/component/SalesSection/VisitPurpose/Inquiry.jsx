@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { addInquiryDetails } from "../../../store/slices/visitSlice";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const Inquiry = ({ _id, visitPurposeDetails }) => {
   const dispatch = useDispatch();
@@ -31,7 +32,7 @@ const Inquiry = ({ _id, visitPurposeDetails }) => {
 
     dispatch(addInquiryDetails(data))
       .then((data) => {
-        
+
         if (data?.payload?.success) {
           alert("Visit saved successfully");
           reset();
@@ -50,7 +51,7 @@ const Inquiry = ({ _id, visitPurposeDetails }) => {
   if (isLoading)
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full" />
       </div>
     );
 
@@ -120,7 +121,7 @@ const Inquiry = ({ _id, visitPurposeDetails }) => {
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full py-3 rounded-lg text-white bg-blue-600 font-medium"
+        className="w-full py-3 rounded-lg text-white bg-primary-600 font-medium"
       >
         Save Visit
       </button>
@@ -128,4 +129,12 @@ const Inquiry = ({ _id, visitPurposeDetails }) => {
   );
 };
 
+Inquiry.propTypes = {
+  _id: PropTypes.string.isRequired,
+  visitPurposeDetails: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
 export default Inquiry;
+

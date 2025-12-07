@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import "../../../App.css";
 import { addDayCareVisit } from "../../../store/slices/visitSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 
 const DayCare = ({ _id, visitPurposeDetails }) => {
@@ -20,7 +21,7 @@ const DayCare = ({ _id, visitPurposeDetails }) => {
   const navigate = useNavigate();
 
   const onSubmit = (data) => {
-  
+
     data.petId = _id;
     data.visitType = visitPurposeDetails._id;
     setIsLoading(true);
@@ -33,7 +34,7 @@ const DayCare = ({ _id, visitPurposeDetails }) => {
       })
       .catch(() => {
         alert("Error saving data");
-      }).finally(()=>{
+      }).finally(() => {
         setIsLoading(false)
       });
   };
@@ -41,7 +42,7 @@ const DayCare = ({ _id, visitPurposeDetails }) => {
   if (isLoading)
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full" />
       </div>
     );
 
@@ -83,7 +84,7 @@ const DayCare = ({ _id, visitPurposeDetails }) => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
+            className="w-full bg-primary-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
           >
             Submit
           </button>
@@ -93,4 +94,13 @@ const DayCare = ({ _id, visitPurposeDetails }) => {
   );
 };
 
+DayCare.propTypes = {
+  _id: PropTypes.string.isRequired,
+  visitPurposeDetails: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+  }).isRequired,
+};
+
 export default DayCare;
+

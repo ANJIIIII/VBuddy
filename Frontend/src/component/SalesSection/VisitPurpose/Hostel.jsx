@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import "../../../App.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getSubscriptionDetails } from "../../../store/slices/subscriptionSlice";
 import { addHostelVisit } from "../../../store/slices/visitSlice";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
+
 const Hostel = ({ _id, visitPurposeDetails }) => {
-  const { isLoading, setIsLoading } = useState(false);
- 
+  const [isLoading, setIsLoading] = useState(false);
+
   const dispatch = useDispatch();
 
   const { register, handleSubmit, setValue, watch, reset } = useForm({
@@ -23,7 +25,7 @@ const Hostel = ({ _id, visitPurposeDetails }) => {
   const [planId, setPlanId] = useState("");
   const discount = watch("discount");
   const isSubscriptionAvailed = watch("isSubscriptionAvailed");
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const { subscriptionDetails } = useSelector((state) => state.subscription);
   const onSubmit = (data) => {
@@ -41,11 +43,13 @@ const Hostel = ({ _id, visitPurposeDetails }) => {
 
   useEffect(() => {
     const params = new URLSearchParams();
-    params.append("petId", _id.trim());
-    params.append("visitType", visitPurposeDetails._id.trim());
+    if (_id) params.append("petId", _id.trim());
+    if (visitPurposeDetails?._id) params.append("visitType", visitPurposeDetails._id.trim());
     const queryString = params.toString();
-    dispatch(getSubscriptionDetails(queryString));
-  }, []);
+    if (queryString) {
+      dispatch(getSubscriptionDetails(queryString));
+    }
+  }, [dispatch, _id, visitPurposeDetails._id]);
 
   const handleAvail = (id) => {
     setPlanId(id);
@@ -55,7 +59,7 @@ const Hostel = ({ _id, visitPurposeDetails }) => {
   if (isLoading)
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full" />
       </div>
     );
 
@@ -87,23 +91,23 @@ const Hostel = ({ _id, visitPurposeDetails }) => {
           <div className="mt-6 flex justify-between gap-4">
             <button
               onClick={() => handleAvail(subscriptionDetails?.planId?._id)}
-              className="w-1/2 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+              className="w-1/2 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition"
             >
               {isSubscriptionAvailed ? "Not Avail" : "Avail"}
             </button>
           </div>
         </div>
       ) : (
-        <div className="mt-3 max-w-full mx-auto p-6  rounded-2xl">
+        <div className="mt-3 w-full mx-auto p-6 rounded-2xl">
           <h2 className="text-xl font-semibold text-gray-800 text-center mb-4">
             The pet has no subscription for hostel
           </h2>
         </div>
       )}
-      <div className="max-w-full flex justify-center">
+      <div className="w-full">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="bg-white p-6 rounded-lg shadow-md  w-full space-y-4"
+          className="bg-white p-6 rounded-lg shadow-md w-full space-y-4"
         >
           <h2 className="text-xl font-semibold text-gray-700">Boarding Form</h2>
           {/* Number of Days */}
@@ -117,25 +121,25 @@ const Hostel = ({ _id, visitPurposeDetails }) => {
                 min: 1,
                 valueAsNumber: true,
               })}
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
               placeholder="Enter number of days"
             />
           </div>
           {/* Discount */}
           {!isSubscriptionAvailed ? (
-            <div className="flex w-full items-center justify-between px-5">
-              <div>
+            <div className="flex w-full items-center justify-between px-1 gap-4">
+              <div className="flex-1">
                 <label className="block text-gray-600 mb-1">Price</label>
-                <div>{visitPurposeDetails?.price}</div>
+                <div className="py-2">{visitPurposeDetails?.price}</div>
               </div>
-              <div>
+              <div className="flex-1">
                 <label className="block text-gray-600 mb-1">Discount</label>
                 <input
                   type="number"
                   max={350}
                   min={0}
                   {...register("discount", { min: 0, valueAsNumber: true })}
-                  className="w-full p-2 border rounded-lg"
+                  className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
                   placeholder="Enter discount"
                 />
               </div>
@@ -149,13 +153,13 @@ const Hostel = ({ _id, visitPurposeDetails }) => {
               {isSubscriptionAvailed
                 ? 0
                 : (visitPurposeDetails?.price - discount) * numberofdays
-                ? (visitPurposeDetails?.price - discount) * numberofdays
-                : 0}
+                  ? (visitPurposeDetails?.price - discount) * numberofdays
+                  : 0}
             </div>
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
+            className="w-full bg-primary-600 text-white p-2 rounded-lg hover:bg-primary-700 transition"
           >
             Submit
           </button>
@@ -165,4 +169,13 @@ const Hostel = ({ _id, visitPurposeDetails }) => {
   );
 };
 
+Hostel.propTypes = {
+  _id: PropTypes.string.isRequired,
+  visitPurposeDetails: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+  }).isRequired,
+};
+
 export default Hostel;
+

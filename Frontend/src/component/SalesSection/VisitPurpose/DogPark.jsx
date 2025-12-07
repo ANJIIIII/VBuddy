@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import "../../../App.css";
 import { addDogParkVisit } from "../../../store/slices/visitSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const DogPark = ({ _id, visitPurposeDetails }) => {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const DogPark = ({ _id, visitPurposeDetails }) => {
   if (isLoading)
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full" />
       </div>
     );
 
@@ -77,7 +78,7 @@ const DogPark = ({ _id, visitPurposeDetails }) => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
+            className="w-full bg-primary-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
           >
             Submit
           </button>
@@ -87,4 +88,13 @@ const DogPark = ({ _id, visitPurposeDetails }) => {
   );
 };
 
+DogPark.propTypes = {
+  _id: PropTypes.string.isRequired,
+  visitPurposeDetails: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+  }).isRequired,
+};
+
 export default DogPark;
+

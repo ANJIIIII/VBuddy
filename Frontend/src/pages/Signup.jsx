@@ -1,8 +1,8 @@
 
-
 import { useState } from "react"
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { User, Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -11,9 +11,9 @@ export default function SignupPage() {
     password: "",
     role: "customer",
   })
-   const navigate=useNavigate();
-  
-  const dispatch=useDispatch();
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
@@ -58,9 +58,9 @@ export default function SignupPage() {
     return Object.keys(newErrors).length === 0
   }
 
-   const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setLoading(true);
@@ -98,92 +98,104 @@ export default function SignupPage() {
   };
 
   return (
-  <div className="min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-[#DFD0B8] to-white px-4 py-6">
-  <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow-md border border-[#948979]/30">
-    
-    {/* Header */}
-    <div className="text-center mb-4">
-      <h2 className="text-xl font-bold text-[#222831]">Customer Signup</h2>
-      <p className="text-sm text-[#393E46]">Join Our Pet Family</p>
-    </div>
+    <div className="min-h-[80vh] flex items-center justify-center bg-secondary-50 px-4 py-6">
+      <div className="w-full max-w-sm bg-white p-8 rounded-2xl shadow-xl border border-secondary-100">
 
-    <form onSubmit={handleSubmit} className="space-y-4 text-sm">
-      {/* Full Name */}
-      <div>
-        <label className="block mb-1 text-[#393E46]">Full Name</label>
-        <input
-          type="text"
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleInputChange}
-          placeholder="Your name"
-          className={`w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-[#948979] bg-[#DFD0B8]/30 text-[#222831] ${
-            errors.fullName ? "border-red-500" : "border-gray-300"
-          }`}
-        />
-        {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
-      </div>
-
-      {/* Email */}
-      <div>
-        <label className="block mb-1 text-[#393E46]">Email</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-          placeholder="you@example.com"
-          className={`w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-[#948979] bg-[#DFD0B8]/30 text-[#222831] ${
-            errors.email ? "border-red-500" : "border-gray-300"
-          }`}
-        />
-        {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-      </div>
-
-      {/* Password */}
-      <div>
-        <label className="block mb-1 text-[#393E46]">Password</label>
-        <div className="relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            placeholder="••••••••"
-            className={`w-full px-3 py-2 pr-10 rounded-md border focus:outline-none focus:ring-2 focus:ring-[#948979] bg-[#DFD0B8]/30 text-[#222831] ${
-              errors.password ? "border-red-500" : "border-gray-300"
-            }`}
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-[#948979]"
-          >
-            {showPassword ? "🙈" : "👁️"}
-          </button>
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-secondary-900">Create Account</h2>
+          <p className="text-secondary-500 mt-1">Join Our Pet Family</p>
         </div>
-        {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Full Name */}
+          <div>
+            <label className="block mb-1.5 text-sm font-medium text-secondary-700">Full Name</label>
+            <div className="relative">
+              <input
+                type="text"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleInputChange}
+                placeholder="John Doe"
+                className={`w-full pl-10 pr-4 py-2.5 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all text-secondary-900 placeholder:text-secondary-400 ${errors.fullName ? "border-red-500 focus:border-red-500" : "border-secondary-200 focus:border-primary-500"
+                  }`}
+              />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-400">
+                <User size={18} />
+              </div>
+            </div>
+            {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block mb-1.5 text-sm font-medium text-secondary-700">Email Address</label>
+            <div className="relative">
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="you@example.com"
+                className={`w-full pl-10 pr-4 py-2.5 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all text-secondary-900 placeholder:text-secondary-400 ${errors.email ? "border-red-500 focus:border-red-500" : "border-secondary-200 focus:border-primary-500"
+                  }`}
+              />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-400">
+                <Mail size={18} />
+              </div>
+            </div>
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block mb-1.5 text-sm font-medium text-secondary-700">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                placeholder="••••••••"
+                className={`w-full pl-10 pr-10 py-2.5 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all text-secondary-900 placeholder:text-secondary-400 ${errors.password ? "border-red-500 focus:border-red-500" : "border-secondary-200 focus:border-primary-500"
+                  }`}
+              />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-400">
+                <Lock size={18} />
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-secondary-400 hover:text-secondary-600 focus:outline-none"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 bg-primary-600 text-white rounded-lg font-bold shadow-lg shadow-primary-500/30 hover:bg-primary-700 hover:shadow-primary-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95 flex items-center justify-center"
+          >
+            {loading ? (
+              <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></span>
+            ) : null}
+            {loading ? "Creating Account..." : "Create Account"}
+          </button>
+        </form>
+
+        {/* Login Link */}
+        <p className="mt-6 text-sm text-center text-secondary-500">
+          Already have an account?{" "}
+          <a href="/login" className="text-primary-600 font-semibold hover:text-primary-700 transition-colors">
+            Sign In here
+          </a>
+        </p>
       </div>
-
-      {/* Submit Button */}
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full py-2 mt-2 bg-[#222831] text-white rounded-md font-semibold text-sm hover:bg-[#393E46] transition-all disabled:opacity-60"
-      >
-        {loading ? "Creating..." : "Create Account"}
-      </button>
-    </form>
-
-    {/* Login Link */}
-    <p className="mt-4 text-xs text-center text-[#393E46]">
-      Already have an account?{" "}
-      <a href="/login" className="text-[#222831] font-medium underline hover:text-[#948979]">
-        Login here
-      </a>
-    </p>
-  </div>
-</div>
-
+    </div>
   )
 }

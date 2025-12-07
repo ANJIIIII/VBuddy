@@ -2,107 +2,98 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAlertListOfInventory } from "../../store/slices/inventorySlice";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../store/slices/authSlice";
+import { ArrowLeft, AlertTriangle, Package, RefreshCw } from "lucide-react";
 
 const AlertList = () => {
   const dispatch = useDispatch();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const { inventoryList } = useSelector((state) => state.inventory);
+
   useEffect(() => {
     dispatch(getAlertListOfInventory());
-  }, []);
+  }, [dispatch]);
 
-  const handleRefill=(id)=>{
-    navigate("/editInventory", {state:{id}})
-  }
+  const handleRefill = (id) => {
+    navigate("/editInventory", { state: { id } });
+  };
 
   return (
-    // <div className="mt-5 text-[12px] lg:text-[15px] flex flex-col gap-y-4 items-center justify-center">
-    //   <h2 className="text-2xl">Alert List</h2>
-    //   <table className="mt-5 w-[90%] sm:w-[85%] rounded-lg">
-    //     <thead>
-    //       <tr className="bg-[#D0DFF2] min-h-[40px] grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-x-4">
-    //         <th className="hidden col-span-1 lg:flex justify-center items-center">
-    //           No.
-    //         </th>
-    //         <th className="flex col-span-2 justify-center items-center">
-    //           Name{" "}
-    //         </th>
-    //         <th className="flex col-span-2 justify-center items-center">
-    //           Stock Unit
-    //         </th>
-    //         <th className="flex col-span-2 justify-center items-center">
-    //           Total Volume
-    //         </th>
-    //       </tr>
-    //     </thead>
-    //     <tbody>
-    //       {inventoryList?.map((item, idx) => {
-    //         return (
-    //           <tr
-    //             className={`${
-    //               idx % 2 == 1 ? "bg-[white]" : "bg-[#F3F8FE]"
-    //             }min-h-[40px] grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-x-4`}
-    //             key={idx}
-    //           >
-    //             <td className="hidden col-span-1 lg:flex justify-center items-center">
-    //               {idx + 1}
-    //             </td>
-    //             <td className="flex col-span-2 justify-center items-center">
-    //               {item?.itemName}
-    //             </td>
-    //             <td className="flex col-span-2 justify-center items-center">
-    //               {item?.stockUnit}
-    //             </td>
-    //             <td className="flex col-span-2 justify-center items-center">
-    //               {item?.totalVolume}
-    //             </td>
-    //           </tr>
-    //         );
-    //       })}
-    //     </tbody>
-    //   </table>
-    // </div>
-    <div className="w-[90%] mx-auto mt-5 text-sm lg:text-base flex flex-col gap-y-4 items-center justify-center">
-  <h2 className="text-2xl tracking-widest font-semibold">ALERT LIST</h2>
-  <div className="overflow-x-auto w-full mt-5">
-    <table className="min-w-full table-auto rounded-lg shadow-md">
-      <thead>
-        <tr className="bg-[#172554] text-white text-left">
-          <th className="px-6 py-3 text-center">No.</th>
-          <th className="px-6 py-3 text-center">Name</th>
-          <th className="px-6 py-3 text-center">Stock</th>
-          <th className="px-6 py-3 text-center">Refill</th>
-        </tr>
-      </thead>
-      <tbody>
-        {inventoryList?.map((item, idx) => {
-          return (
-            <tr
-              key={idx}
-              className= "bg-white border-b border-[#E0E0E0]"
-            >
-              <td className="px-6 py-4 text-center">{idx + 1}</td>
-              <td className="px-6 py-4 text-center">{item?.itemName}</td>
-              <td className="px-6 py-4 text-center">{item?.stock}</td>
-       
-              <td className="px-6 py-4 text-center">
-                <button
-                  onClick={()=>handleRefill(item?._id)}
-                  className="bg-[#172554] text-white px-4 py-2 rounded-md hover:bg-[#0b1d3d] transition-colors duration-300"
-                >
-                  Refill
-                </button>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  </div>
-</div>
+    <div className="min-h-screen bg-secondary-50/30 p-4 md:p-8 animate-in fade-in">
+      <div className="max-w-6xl mx-auto">
 
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-8">
+          <button
+            onClick={() => navigate(-1)}
+            className="p-2 rounded-full bg-white border border-secondary-200 text-secondary-600 hover:text-primary-600 hover:border-primary-200 transition-all shadow-sm"
+            aria-label="Go Back"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <div>
+          </div>
+        </div>
 
+        {/* Content */}
+        <div className="bg-white rounded-xl shadow-sm border border-secondary-200 overflow-hidden">
+          {inventoryList && inventoryList.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-secondary-50 border-b border-secondary-100 text-xs uppercase tracking-wider text-secondary-500 font-semibold">
+                    <th className="px-6 py-4">Item Name</th>
+                    <th className="px-6 py-4 text-center">Remaining Stock</th>
+                    <th className="px-6 py-4 text-center">Status</th>
+                    <th className="px-6 py-4 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-secondary-100">
+                  {inventoryList.map((item, idx) => (
+                    <tr key={idx} className="hover:bg-secondary-50/50 transition-colors group">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-red-50 text-red-500 flex items-center justify-center">
+                            <Package size={16} />
+                          </div>
+                          <span className="font-medium text-secondary-900">{item.itemName}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700">
+                          {item.stock} Units
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <span className="text-xs font-medium text-red-600 flex items-center justify-center gap-1">
+                          <AlertTriangle size={12} />
+                          Critical
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <button
+                          onClick={() => handleRefill(item._id)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-secondary-200 text-secondary-700 hover:text-primary-700 hover:border-primary-200 rounded-lg text-sm font-medium transition-all shadow-sm"
+                        >
+                          <RefreshCw size={14} /> Refill
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 text-secondary-400">
+              <div className="w-16 h-16 bg-primary-50 text-primary-500 rounded-full flex items-center justify-center mb-4">
+                <Package size={32} />
+              </div>
+              <h3 className="text-lg font-medium text-secondary-900">Good Job!</h3>
+              <p className="text-sm">No inventory alerts found. Stock levels are healthy.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 

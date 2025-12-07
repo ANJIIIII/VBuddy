@@ -93,8 +93,8 @@ exports.getSubscriptionDetails = async (req, res) => {
       {
         path: "petId",
         populate: {
-          path: "owner", // Populate owner within petId
-          select: "name phone", // Only include name and phone fields from User
+          path: "owner", 
+          select: "name phone", 
         },
       },
     ])

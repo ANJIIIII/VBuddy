@@ -1,4 +1,3 @@
-import React from 'react';
 import Footer from '../HomepageComponent/Footer';
 
 const AboutUs = () => {
@@ -22,8 +21,8 @@ const AboutUs = () => {
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 md:mb-4 text-[#123524]">Who We Are</h2>
 
               <p className="text-base md:text-lg mb-3 text-[#3E7B27]">
-                At Doggos Heaven, we believe that every dog deserves a life full of joy, care, and unconditional love. We're
-                more than just a destination for pets — we're a second home where every wagging tail is celebrated and every
+                At Doggos Heaven, we believe that every dog deserves a life full of joy, care, and unconditional love. We&apos;re
+                more than just a destination for pets — we&apos;re a second home where every wagging tail is celebrated and every
                 furry face is treated like family.
               </p>
 
@@ -36,11 +35,11 @@ const AboutUs = () => {
             <div className="relative">
               {/* Green circle background effect - smaller */}
               <div className="absolute -top-2 -left-2 w-full h-full bg-[#85A947] rounded-full opacity-30"></div>
-              
+
               <div className="relative h-48 sm:h-56 md:h-64 rounded-xl overflow-hidden shadow-lg border-2 md:border-4 border-[#3E7B27]">
                 <img src="./images/g1.jpeg" alt="Dogs being cared for" className="w-full h-full object-cover" />
               </div>
-              
+
               {/* Decorative paw prints - smaller */}
               <div className="absolute -bottom-3 -right-3 text-[#123524] text-2xl md:text-3xl">🐾</div>
             </div>
@@ -81,7 +80,7 @@ const AboutUs = () => {
               <div className="relative">
                 {/* Decorative frame - smaller */}
                 <div className="absolute -top-2 -bottom-2 -left-2 -right-2 border-2 border-dashed border-[#85A947] rounded-lg"></div>
-                
+
                 <div className="relative h-48 sm:h-56 md:h-64 rounded-lg overflow-hidden shadow-lg">
                   <img src="./images/g4.jpeg" alt="Cat with food bowl" className="w-full h-full object-cover" />
                 </div>
@@ -90,14 +89,14 @@ const AboutUs = () => {
               <div className="space-y-3 md:space-y-4 bg-[#EFE3C2] bg-opacity-60 p-4 rounded-lg">
                 <p className="text-base md:text-lg text-[#123524]">
                   At Doggos Heaven, every wag, every cuddle, and every happy bark tells a story of trust, love, and
-                  transformation. We're proud to have built a space where dogs of all breeds, ages, and personalities can
+                  transformation. We&apos;re proud to have built a space where dogs of all breeds, ages, and personalities can
                   find joy, comfort, and a sense of belonging.
                 </p>
 
                 <p className="text-base md:text-lg text-[#123524]">
-                  Over time, we've helped countless dogs grow more confident, healthier, and socially connected.
+                  Over time, we&apos;ve helped countless dogs grow more confident, healthier, and socially connected.
                 </p>
-                
+
                 {/* Small decorative paw prints */}
                 <div className="flex justify-end">
                   <span className="text-[#85A947] text-xl">🐾 🐾 🐾</span>

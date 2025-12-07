@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../../../App.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getSubscriptionDetails } from "../../../store/slices/subscriptionSlice";
 import { addGroomingVisit } from "../../../store/slices/visitSlice";
+import PropTypes from "prop-types";
 
 const Grooming = ({ _id, visitPurposeDetails }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,22 +16,22 @@ const Grooming = ({ _id, visitPurposeDetails }) => {
   const navigate = useNavigate();
 
   const { subscriptionDetails } = useSelector((state) => state.subscription);
-  
+
   useEffect(() => {
-    
+
     if (!_id || _id.trim() === '') {
       console.error("Pet ID is missing or empty");
       return;
     }
-    
+
     if (!visitPurposeDetails || !visitPurposeDetails._id || visitPurposeDetails._id.trim() === '') {
       console.error("Visit purpose details are missing or invalid");
       return;
     }
-    
+
     console.log("Fetching subscription details with pet ID:", _id);
     console.log("Visit purpose details:", visitPurposeDetails._id);
-    
+
     const params = new URLSearchParams();
     params.append("petId", _id.trim());
     params.append("visitType", visitPurposeDetails._id.trim());
@@ -58,23 +59,23 @@ const Grooming = ({ _id, visitPurposeDetails }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     console.log("Submitting form with pet ID:", _id);
     console.log("Visit purpose details ID:", visitPurposeDetails._id);
-    
+
     // Validate the IDs to ensure they exist
     if (!_id || _id.trim() === '') {
       console.error("Missing pet ID");
       alert("A pet must be selected. Please select a pet before proceeding.");
       return;
     }
-    
+
     if (!visitPurposeDetails || !visitPurposeDetails._id || visitPurposeDetails._id.trim() === '') {
       console.error("Missing visit type ID");
       alert("Visit type is missing. Please try again.");
       return;
     }
-    
+
     // Prepare form data in a format matching your schema
     const data = {
       pet: _id, // Use the pet ID passed as prop
@@ -87,20 +88,20 @@ const Grooming = ({ _id, visitPurposeDetails }) => {
         finalPrice: getTotalPrice()
       }
     };
-    
+
     console.log("Form data prepared:", data);
-    
+
     // Process the visit save directly without payment
     processVisitSave(data);
   };
 
   const processVisitSave = (data) => {
     setIsLoading(true);
-    
+
     console.log("Processing visit save with data:", data);
     console.log("Pet ID:", data.pet);
     console.log("Visit Type ID:", data.visitType);
-    
+
     // Make absolutely sure we have valid IDs before proceeding
     if (!data.pet || typeof data.pet !== 'string' || data.pet.trim() === '') {
       console.error("Invalid pet ID:", data.pet);
@@ -108,14 +109,14 @@ const Grooming = ({ _id, visitPurposeDetails }) => {
       setIsLoading(false);
       return;
     }
-    
+
     if (!data.visitType || typeof data.visitType !== 'string' || data.visitType.trim() === '') {
       console.error("Invalid visit type ID:", data.visitType);
       alert("Invalid visit type. Please try again.");
       setIsLoading(false);
       return;
     }
-    
+
     // Create the request body that matches backend expectations
     const requestBody = {
       petId: data.pet.trim(),
@@ -124,9 +125,9 @@ const Grooming = ({ _id, visitPurposeDetails }) => {
       isSubscriptionAvailed: data.details.isSubscriptionAvailed || false,
       planId: data.details.planId || ""
     };
-    
+
     console.log("Saving visit with data:", requestBody);
-    
+
     // Use the Redux action to save the visit
     dispatch(addGroomingVisit(requestBody))
       .then((result) => {
@@ -149,7 +150,7 @@ const Grooming = ({ _id, visitPurposeDetails }) => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -200,7 +201,7 @@ const Grooming = ({ _id, visitPurposeDetails }) => {
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-lg shadow-md w-full space-y-4"
         >
-          
+
           {!isSubscriptionAvailed ? (
             <div className="flex w-full items-center justify-between px-5">
               <div>
@@ -229,7 +230,7 @@ const Grooming = ({ _id, visitPurposeDetails }) => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
+            className="w-full bg-primary-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
           >
             Save Visit
           </button>
@@ -237,6 +238,14 @@ const Grooming = ({ _id, visitPurposeDetails }) => {
       </div>
     </div>
   );
+};
+
+Grooming.propTypes = {
+  _id: PropTypes.string.isRequired,
+  visitPurposeDetails: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+  }).isRequired,
 };
 
 export default Grooming;

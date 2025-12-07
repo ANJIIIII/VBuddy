@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { addVeterinaryVisit } from "../../../store/slices/visitSlice";
 import { getAllInventory } from "../../../store/slices/inventorySlice";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const Veterinary = ({ _id, visitPurposeDetails }) => {
   const dispatch = useDispatch();
@@ -78,8 +79,8 @@ const Veterinary = ({ _id, visitPurposeDetails }) => {
 
     setTotalPrice(medicineTotal + vaccineTotal);
   };
-  
-  const navigate=useNavigate();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     calculateTotalPrice();
@@ -87,7 +88,6 @@ const Veterinary = ({ _id, visitPurposeDetails }) => {
 
   const handleCustomerTypeChange = (value) => {
     setCustomerType(value);
-    calculateTotalPrice(); // Recalculate immediately after customerType changes
   };
 
   const handleMedicineChange = (index, field, value) => {
@@ -219,7 +219,7 @@ const Veterinary = ({ _id, visitPurposeDetails }) => {
             onClick={() =>
               setMedicines([...medicines, { id: "", quantity: 1 }])
             }
-            className="mt-2 text-blue-600 font-medium"
+            className="mt-2 text-primary-600 font-medium"
           >
             + Add Medicine
           </button>
@@ -294,7 +294,7 @@ const Veterinary = ({ _id, visitPurposeDetails }) => {
             onClick={() =>
               setVaccines([...vaccines, { id: "", volume: 1, doseNumber: 1 }])
             }
-            className="mt-2 text-blue-600 font-medium"
+            className="mt-2 text-primary-600 font-medium"
           >
             + Add Vaccine
           </button>
@@ -339,7 +339,7 @@ const Veterinary = ({ _id, visitPurposeDetails }) => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-md"
+          className="w-full bg-primary-600 text-white py-2 rounded-md"
         >
           Submit Inquiry
         </button>
@@ -348,4 +348,12 @@ const Veterinary = ({ _id, visitPurposeDetails }) => {
   );
 };
 
+Veterinary.propTypes = {
+  _id: PropTypes.string.isRequired,
+  visitPurposeDetails: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
 export default Veterinary;
+

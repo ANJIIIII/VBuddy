@@ -1,21 +1,21 @@
 import React from 'react'
-import { useLocation,Navigate,Outlet} from 'react-router-dom';
+import { useLocation, Navigate, Outlet } from 'react-router-dom';
 
-const CheckAuth = ({isAuthenticated}) => {
-  
-  const location=useLocation().pathname;
+const CheckAuth = ({ isAuthenticated }) => {
 
-  if(isAuthenticated){
-     if(location.includes("login"))
-     return <Navigate to="/dashboard"/>
-  }
-  
-  if(!isAuthenticated){
-     if(!(location.includes("login")))
-     return <Navigate to ="/login"/>
-  }
+   const location = useLocation().pathname;
 
-  return <Outlet/>
+   if (isAuthenticated) {
+      if (location.includes("login"))
+         return <Navigate to="/dashboard" />
+   }
+
+   if (!isAuthenticated) {
+      if (!(location.includes("login") || location === "/" || location.includes("signup") || location.includes("aboutus")))
+         return <Navigate to="/login" />
+   }
+
+   return <Outlet />
 }
 
 export default CheckAuth
