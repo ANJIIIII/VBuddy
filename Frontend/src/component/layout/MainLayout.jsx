@@ -24,11 +24,19 @@ const MainLayout = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
-    const { user } = useSelector(state => state.auth);
+    const { user, isAuthenticated } = useSelector(state => state.auth);
+
+    // Force logout if session is valid but user data is missing (handles legacy sessions)
+    React.useEffect(() => {
+        if (isAuthenticated && !user) {
+            dispatch(logout()).then(() => navigate('/login'));
+        }
+    }, [isAuthenticated, user, dispatch, navigate]);
 
     const handleLogout = () => {
-        dispatch(logout());
-        navigate('/login');
+        dispatch(logout()).then(() => {
+            navigate('/');
+        });
     };
 
     const navItems = [
@@ -93,7 +101,7 @@ const MainLayout = () => {
                         {isSidebarOpen && (
                             <div className="ml-3 overflow-hidden">
                                 <p className="text-sm font-semibold text-white truncate">{user?.fullName || 'User'}</p>
-                                <p className="text-xs text-secondary-300 truncate">{user?.email || 'admin@petcure.com'}</p>
+                                <p className="text-xs text-secondary-300 truncate">{user?.email}</p>
                             </div>
                         )}
                     </div>

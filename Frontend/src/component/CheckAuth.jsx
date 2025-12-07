@@ -12,7 +12,7 @@ const CheckAuth = ({ isAuthenticated }) => {
 
    if (!isAuthenticated) {
       if (!(location.includes("login") || location === "/" || location.includes("signup") || location.includes("aboutus")))
-         return <Navigate to="/login" />
+         return <Navigate to="/" />
    }
 
    return <Outlet />
