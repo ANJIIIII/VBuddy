@@ -40,7 +40,7 @@ const MainLayout = () => {
     };
 
     const navItems = [
-        { label: 'Home', path: '/', icon: HomeIcon },
+        // Home moved to header
         { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
         { label: 'Pet Master', path: '/history', icon: Dog },
         { label: 'Inventory', path: '/inventoryList', icon: Package },
@@ -130,6 +130,15 @@ const MainLayout = () => {
 
                     <div className="flex items-center space-x-6">
                         {/* Search Bar Removed as per request */}
+
+                        {/* Home Button */}
+                        <button
+                            onClick={() => navigate('/')}
+                            className="p-2 rounded-full text-secondary-500 hover:bg-secondary-100 transition-colors"
+                            title="Go to Home"
+                        >
+                            <HomeIcon size={22} />
+                        </button>
 
                         {/* Notifications */}
                         <button
